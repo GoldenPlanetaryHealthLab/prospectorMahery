@@ -8,3 +8,7 @@
 ^\.vscode($|/)
 ^spack\.lock$
 ^CODE_OF_CONDUCT\.md$
+^dev$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

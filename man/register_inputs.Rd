@@ -2,7 +2,7 @@
 % Please edit documentation in R/register_inputs.R
 \name{register_inputs}
 \alias{register_inputs}
-\title{register_inputs Title}
+\title{List matching file paths from a zip archive}
 \usage{
 register_inputs(input_path, regex = "MAHERY")
 }
@@ -15,7 +15,8 @@ register_inputs(input_path, regex = "MAHERY")
 vector of file paths
 }
 \description{
-Description of the function
+Lists the contents of a zipped dataset and returns the paths of files
+whose names match the supplied regular expression.
 }
 \examples{
 register_inputs(

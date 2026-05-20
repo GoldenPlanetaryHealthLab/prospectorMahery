@@ -343,3 +343,4 @@ rv/*
 *.err
 *.out
 inst/doc
+docs

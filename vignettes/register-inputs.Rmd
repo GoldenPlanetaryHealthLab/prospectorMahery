@@ -54,6 +54,8 @@ For this subproject we're going to want to register only the files in
 
 
 ```{r examples-register_inputs}
+#| eval: no
+
 register_inputs(
   here(
     "data", 

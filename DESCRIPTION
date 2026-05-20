@@ -15,13 +15,15 @@ Description: Dataset prospector to generate the MAHERY data set related to
 License: MIT + file LICENSE
 Imports: 
     dplyr,
+    magrittr,
     stringr
 Suggests: 
     here,
     knitr,
     readr,
     rmarkdown,
-    testthat
+    testthat,
+    withr
 VignetteBuilder: 
     knitr
 Config/fusen/version: 0.7.2

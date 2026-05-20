@@ -46,9 +46,10 @@ For this subproject we're going to want to register only the files in
 ```
 
 ```{r function-register_inputs}
-#' register_inputs Title
+#' List matching file paths from a zip archive
 #'
-#' Description of the function
+#' Lists the contents of a zipped dataset and returns the paths of files
+#' whose names match the supplied regular expression.
 #' 
 #' @param input_path path to the zipped dataset
 #' @param regex regular expression to filter the files to be registered
@@ -72,7 +73,7 @@ register_inputs <- function(input_path, regex = "MAHERY") {
 }
 ```
 
-```{r examples-register_inputs}
+```{r examples-register_inputs, eval=FALSE}
 register_inputs(
   here(
     "data", 
@@ -87,8 +88,46 @@ register_inputs(
 Great! That can go into our pipeline as the starting point.
 
 ```{r tests-register_inputs}
-test_that("register_inputs works", {
-  expect_true(inherits(register_inputs, "function"))
+test_that("register_inputs lists only matching files from input zip", {
+  tmpdir <- withr::local_tempdir()
+
+  files <- file.path(
+    tmpdir,
+    c(
+      "raw/MAHERY_clinic_2024.csv",
+      "raw/MAHERY_households_2024.csv",
+      "raw/OTHER_site_2024.csv",
+      "metadata/readme.txt"
+    )
+  )
+
+  dir.create(dirname(files[1]), recursive = TRUE)
+  dir.create(dirname(files[4]), recursive = TRUE)
+  file.create(files)
+
+  zip_path <- file.path(tmpdir, "incoming_dataset.zip")
+  old_wd <- setwd(tmpdir)
+  withr::defer(setwd(old_wd))
+
+  zip(
+    zipfile = zip_path,
+    files = c(
+      "raw/MAHERY_clinic_2024.csv",
+      "raw/MAHERY_households_2024.csv",
+      "raw/OTHER_site_2024.csv",
+      "metadata/readme.txt"
+    )
+  )
+
+  result <- register_inputs(zip_path, regex = "MAHERY")
+
+  expect_equal(
+    sort(result),
+    sort(c(
+      "raw/MAHERY_clinic_2024.csv",
+      "raw/MAHERY_households_2024.csv"
+    ))
+  )
 })
 ```
 
