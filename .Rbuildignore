@@ -1,3 +1,14 @@
-^dev$
+^dev($|/)
 ^\.here$
 ^LICENSE\.md$
+^\.spack-env($|/)
+^rv($|/)
+^data($|/)
+^sandbox($|/)
+^\.vscode($|/)
+^spack\.lock$
+^CODE_OF_CONDUCT\.md$
+^dev$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

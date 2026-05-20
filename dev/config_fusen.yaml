@@ -1,0 +1,15 @@
+flat_register_inputs.Rmd:
+  path: dev/flat_register_inputs.Rmd
+  state: active
+  R: R/register_inputs.R
+  tests: tests/testthat/test-register_inputs.R
+  vignettes: vignettes/register-inputs.Rmd
+  inflate:
+    flat_file: dev/flat_register_inputs.Rmd
+    vignette_name: Register Inputs
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
+    clean: ask
+    codecov: false
