@@ -342,3 +342,4 @@ rv/*
 **logs/*
 *.err
 *.out
+inst/doc

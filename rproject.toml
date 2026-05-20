@@ -23,4 +23,8 @@ dependencies = [
     "rmarkdown",
     { name = "bakepipe", git = "https://github.com/vangberg/bakepipe", branch = "main" },
     "fusen",
+    "remotes",
+    "fledge",
+    "readr",
+    "stringr",
 ]

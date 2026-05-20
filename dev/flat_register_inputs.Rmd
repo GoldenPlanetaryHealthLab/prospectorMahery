@@ -1,0 +1,101 @@
+---
+title: "flat_register_inputs.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# register_inputs
+
+This is a simple function that registers the input data.
+
+This project has a zipped dataset in inputs that we zipped
+directly from the [old GitHub repo](https://github.com/MAHERY-Cohort-Data/madagascar_data_cleaning).
+So, to get the necessary input files, we must open the zip file
+and list its contents. The function `register_inputs()` will do this for us.
+
+```{r}
+library(here)
+library(readr)
+library(stringr)
+library(dplyr)
+```
+
+```{r}
+input_path <- here("data", "inputs", "01_gold_mine", "madagascar-cohort-data-zip/madagascar_data_cleaning-main.zip")
+```
+
+```{r}
+unzip(input_path, list = TRUE)
+```
+
+For this subproject we're going to want to register only the files in
+`Data/MAHERY`
+
+```{r development-register_inputs}
+# Prepare the code of your function here
+```
+
+```{r function-register_inputs}
+#' register_inputs Title
+#'
+#' Description of the function
+#' 
+#' @param input_path path to the zipped dataset
+#' @param regex regular expression to filter the files to be registered
+#' @importFrom dplyr filter pull
+#' @importFrom stringr str_detect
+#' @return vector of file paths
+#' @export
+#'
+#' @examples
+register_inputs <- function(input_path, regex = "MAHERY") {
+  
+  # List the contents of the zip file
+  contents <- unzip(input_path, list = TRUE)
+  
+  # Filter the contents based on the regex
+  contents %>%
+    filter(str_detect(Name, regex)) %>%
+    pull(Name) %>%
+    return()
+  
+}
+```
+
+```{r examples-register_inputs}
+register_inputs(
+  here(
+    "data", 
+    "inputs", 
+    "01_gold_mine", 
+    "madagascar-cohort-data-zip/madagascar_data_cleaning-main.zip"
+    ),
+  regex = "Data\\/MAHERY"
+  )
+```
+
+Great! That can go into our pipeline as the starting point.
+
+```{r tests-register_inputs}
+test_that("register_inputs works", {
+  expect_true(inherits(register_inputs, "function"))
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_register_inputs.Rmd", vignette_name = "Register Inputs", check=FALSE, overwrite = TRUE, open_vignette = FALSE)
+```
+

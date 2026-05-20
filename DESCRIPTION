@@ -1,23 +1,30 @@
 Package: prospectorMahery
-Version: 0.0.0.9000
 Title: Prospector for MAHERY Project Data
-Description: Dataset prospector to generate the MAHERY data set related to the project "Cohort Profile: The Madagascar Health and Environmental Research (MAHERY) study in north-eastern Madagascar".
-Authors@R: c(person(given = c("Tinashe", "Michael"),
-         family = "Tapera",
-         role = c("aut", "cre"),
-         email = "ttapera@hsph.harvard.edu",
-         comment = c(ORCID = "0000-0001-9080-5010")),
-  person(given = "Christopher",
-         family = "Golden",
-         role = "cph",
-         email = "golden@hsph.harvard.edu",
-         comment = c(ORCID = "0000-0002-2258-7493")),
-  person(given = "Stephanie",
-         family = "Wu",
-         role = c("aut", "ctb", "dtc"),
-         email = "swu@g.harvard.edu",
-         comment = c(ORCID = "0000-0002-2258-7493")))
+Version: 0.0.0.9000
+Authors@R: c(
+    person(c("Tinashe", "Michael"), "Tapera", , "ttapera@hsph.harvard.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-9080-5010")),
+    person("Christopher", "Golden", , "golden@hsph.harvard.edu", role = "cph",
+           comment = c(ORCID = "0000-0002-2258-7493")),
+    person("Stephanie", "Wu", , "swu@g.harvard.edu", role = c("aut", "ctb", "dtc"),
+           comment = c(ORCID = "0000-0002-2258-7493"))
+  )
+Description: Dataset prospector to generate the MAHERY data set related to
+    the project "Cohort Profile: The Madagascar Health and Environmental
+    Research (MAHERY) study in north-eastern Madagascar".
 License: MIT + file LICENSE
+Imports: 
+    dplyr,
+    stringr
+Suggests: 
+    here,
+    knitr,
+    readr,
+    rmarkdown,
+    testthat
+VignetteBuilder: 
+    knitr
+Config/fusen/version: 0.7.2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
