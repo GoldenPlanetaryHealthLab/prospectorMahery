@@ -1,0 +1,7 @@
+project:
+  title: "prospectorMahery"
+  render:
+  - "*.qmd"
+  - "!rv/"
+
+

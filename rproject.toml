@@ -28,4 +28,5 @@ dependencies = [
     "readr",
     "stringr",
     "withr",
+    "readxl",
 ]

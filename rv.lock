@@ -202,6 +202,16 @@ dependencies = [
 ]
 
 [[packages]]
+name = "cellranger"
+version = "1.1.0"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    "rematch",
+    "tibble",
+]
+
+[[packages]]
 name = "cli"
 version = "3.6.6"
 source = { repository = "https://packagemanager.posit.co/cran/latest" }
@@ -1023,6 +1033,25 @@ dependencies = [
     "cpp11",
     { name = "tzdb", requirement = "(>= 0.1.1)" },
 ]
+
+[[packages]]
+name = "readxl"
+version = "1.5.0"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    "cellranger",
+    { name = "tibble", requirement = "(>= 2.0.1)" },
+    { name = "cpp11", requirement = "(>= 0.5.5)" },
+    "progress",
+]
+
+[[packages]]
+name = "rematch"
+version = "2.0.0"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = []
 
 [[packages]]
 name = "rematch2"
