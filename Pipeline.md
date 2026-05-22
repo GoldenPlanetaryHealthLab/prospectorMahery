@@ -117,3 +117,21 @@ Here’s the preamble from the previous script:
 
 We can use multiple notebooks to orchestrate the pipeline. First, we’ll
 introduce a notebook for cleaning the data:
+
+## Pipeline Run
+
+``` r
+library(bakepipe)
+```
+
+We can check the status of the pipeline with `bakepipe::status()`:
+
+``` r
+status()
+```
+
+Finally, we run the pipeline with `bakepipe::run()`
+
+``` r
+run()
+```

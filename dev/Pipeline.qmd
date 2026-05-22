@@ -52,6 +52,8 @@ the script files from the inputs directory:
 ```{r}
 devtools::load_all(".")
 library(bakepipe)
+library(stringr)
+library(dplyr)
 library(here)
 ```
 
@@ -66,7 +68,7 @@ repo_files <- register_inputs(
     "01_gold_mine", 
     "madagascar-cohort-data-zip/madagascar_data_cleaning-main.zip"
     ),
-  regex = "Data\\/MAHERY"
+  regex = ".+"
   )
 repo_files
 ```
@@ -82,6 +84,39 @@ library(bakepipe)
 ```
 
 We can check the status of the pipeline with `bakepipe::status()`:
+
+```{r}
+#| eval: false
+status()
+```
+
+First, we unzip the data that is relevant to this pipeline:
+
+```{r}
+target_files <- c(
+  "mah_hh_dietary_intake\\.csv",
+  "mahery_metadata\\.xlsx",
+  "MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1\\.xlsx",
+  "dar_hh_weekly_per_month_grams_categs_long\\.csv",
+  "fish_enc_17Feb2025\\.csv"
+  ) %>%
+  paste(collapse = "|")
+  
+zip_paths <- repo_files %>%
+  str_subset(target_files)
+
+unzip(
+  here(
+    "data", 
+    "inputs", 
+    "01_gold_mine", 
+    "madagascar-cohort-data-zip/madagascar_data_cleaning-main.zip"
+    ),
+  files = zip_paths,
+  junkpaths = TRUE,  
+  exdir = here("data", "inputs", "01_gold_mine", "madagascar-cohort-data-zip/")
+)
+```
 
 ```{r}
 #| eval: false

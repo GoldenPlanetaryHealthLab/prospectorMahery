@@ -10,7 +10,7 @@ extensions:
     verbose: true
   ripper:
     include-yaml: false
-    output-dir: "../R"
+    output-dir: "../pipeline"
     output-name: "load_data"  
     script-links-position: "none"
 
@@ -21,9 +21,10 @@ This is a simple notebook that documents the "load data" step.
 The code chunks get exported to a script which is then
 run as part of the pipeline by `bakepipe`.
 
+
 ```{r}
 #| sorting-hat: keep
-library(prospectorMahery)
+devtools::load_all(".")
 library(bakepipe)
 library(stringr)
 library(here)
@@ -81,14 +82,52 @@ if(infile != "/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorM
     stop("File path does not match expected path.")
 }
 
-mah_hh_total <- external_in("/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip/mah_hh_dietary_intake.csv") %>%
-    read_csv(.)
+mah_hh_total <- read_csv(external_in("/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip/mah_hh_dietary_intake.csv"))
+```
+
+This is janky, but we will refactor it into a `targets` pipeline later on.
+For now, we just want to churn this project quickly, so we are going to
+settle for bakepipe's  weirdness.
+
+```{r}
+#| sorting-hat: remove
+
+library(skimr)
+mah_hh_total %>%
+    skim()
+```
+
+Looks like this is a dataframe about household dietary intake.
+
+We do the same with a couple of other files:
+
+```{r}
+#| sorting-hat: keep
+target_file <- "mahery_metadata.xlsx"
+sheet <- 2
+mah_meta_f <- repo_files %>%
+    str_subset(target_file)
+
+mah_meta_f %>%
+    unzip(file.path(inputs_dir, "madagascar_data_cleaning-main.zip"), exdir = inputs_dir, files = ., junkpaths = TRUE)
+infile <- file.path(inputs_dir, target_file)
+
+if(!file.exists(infile)) {
+    stop("File does not exist.")
+}
+
+if(infile != "/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip/mahery_metadata.xlsx") {
+    stop("File path does not match expected path.")
+}
+
+mah_meta <- read_excel(external_in("/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip/mahery_metadata.xlsx"), sheet = sheet)
+mah_meta <- mah_meta %>%
+  mutate(`Malagasy Name` = tolower(`Malagasy Name`))
 ```
 
 ```{r}
 #| sorting-hat: remove
-mah_hh_total %>%
+mah_meta %>%
     summary()
 ```
-
 

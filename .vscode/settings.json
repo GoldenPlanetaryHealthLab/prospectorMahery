@@ -1,7 +1,6 @@
 {
     "r.plot.useHttpgd": true,
-    // "r.rterm.linux": "/n/home03/ttapera/.cargo/bin/arf",
-    // "r.useRenvLibPath": true,
+    //"r.useRenvLibPath": true,
     "r.workspaceViewer.showObjectSize": true,
     "terminal.integrated.defaultProfile.linux": "bash",
     "terminal.integrated.profiles.linux": {
@@ -15,8 +14,8 @@
     "livePreview.defaultPreviewPath": "/docs/index.html",
     "r.sessionWatcher": true,
     "r.alwaysUseActiveTerminal": true,
-    // "r.lsp.path": "/usr/local/bin/R",
-    "r.rpath.linux": "/n/holylabs/LABS/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/.spack-env/view/bin/R",
+    "r.lsp.enabled": true,
+    "r.rpath.linux": "${workspaceFolder}/.vscode/r-lsp",
     "python.terminal.activateEnvInCurrentTerminal": false,
     "r.libPaths": [
         "/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/rv/library/4.5/x86_64/redhat8",

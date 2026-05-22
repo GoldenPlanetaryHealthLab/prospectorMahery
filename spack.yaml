@@ -8,6 +8,12 @@ spack:
   - r@4.5.1
   - py-uv
   - r-cairo
+  - openssl
+  - libpng
+  - freetype
+  - fontconfig
+  - harfbuzz
+  - fribidi
   view: true
   concretizer:
     unify: true

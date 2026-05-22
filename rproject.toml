@@ -31,4 +31,8 @@ dependencies = [
     "readxl",
     "skimr",
     { name = "prospectorMahery", path = ".", dependencies_only = true },
+    "httpuv",
+    "tidyverse",
+    "websocket",
+    "targets",
 ]
