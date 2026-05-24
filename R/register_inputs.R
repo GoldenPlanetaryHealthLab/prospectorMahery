@@ -34,3 +34,47 @@ register_inputs <- function(input_path, regex = "MAHERY") {
     return()
   
 }
+
+#' Unzip selected files and return extracted paths
+#'
+#' Extracts matching files from a zip archive and returns the paths
+#' of the extracted files for use in reproducible pipelines such as
+#' `{targets}`.
+#'
+#' @param zipfile Path to zip archive.
+#' @param files Character vector of internal zip paths to extract.
+#' @param exdir Extraction directory.
+#' @param junkpaths Should directory structure inside archive be discarded?
+#' @param overwrite Should existing files be overwritten?
+#'
+#' @return Character vector of extracted file paths.
+#'
+#' @export
+unzip_tracked <- function(
+  zipfile,
+  files,
+  exdir,
+  junkpaths = TRUE,
+  overwrite = TRUE
+) {
+
+  info <- unzip(zipfile, list = TRUE)
+
+  matched <- str_subset(info$Name, paste(files, collapse = "|"))
+
+  out_files <- if (junkpaths) {
+    file.path(exdir, basename(matched))
+  } else {
+    file.path(exdir, matched)
+  }
+
+  unzip(
+    zipfile = zipfile,
+    files = matched,
+    exdir = exdir,
+    junkpaths = junkpaths,
+    overwrite = overwrite
+  )
+
+  out_files
+}

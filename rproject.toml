@@ -35,4 +35,12 @@ dependencies = [
     "tidyverse",
     "websocket",
     "targets",
+    { name = "tarchetypes", git = "https://github.com/ropensci/tarchetypes/", branch = "main" },
+    "parsermd",
+    "codetools",
+    "quarto",
+    "rlang",
+    "purrr",
+    "tibble",
+    "devtools",
 ]

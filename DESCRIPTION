@@ -23,7 +23,8 @@ Suggests:
     readr,
     rmarkdown,
     testthat,
-    withr
+    withr,
+    zip
 VignetteBuilder: 
     knitr
 Config/fusen/version: 0.7.2

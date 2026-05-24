@@ -1,0 +1,17 @@
+graph LR
+  style Legend fill:#FFFFFF00,stroke:#000000;
+  style Graph fill:#FFFFFF00,stroke:#000000;
+  subgraph Legend
+    xf1522833a4d242c5(["Up to date"]):::uptodate
+    xeb2d7cac8a1ce544>"Function"]:::none
+    xd03d7c7dd2ddda2b(["Regular target"]):::none
+  end
+  subgraph Graph
+    direction LR
+    xd3a10a24e8b9f3f0(["target_files"]):::uptodate --> x3f87a69e8b2529de(["mahery_files"]):::uptodate
+    xa166bcfc62def816>"unzip_tracked"]:::uptodate --> x3f87a69e8b2529de(["mahery_files"]):::uptodate
+    xb6c98845f86dfafb>"register_inputs"]:::uptodate --> x7c66da3dee7f04e2(["repo_files"]):::uptodate
+    
+  end
+  classDef uptodate stroke:#000000,color:#ffffff,fill:#354823;
+  classDef none stroke:#000000,color:#000000,fill:#94a4ac;

@@ -5,15 +5,28 @@
 spack:
   # add package specs to the `specs` list
   specs:
-  - r@4.5.1
-  - py-uv
-  - r-cairo
+  - cmake
+  - libuv
+  - gmake
+  - git
+  - libx11
+  - libxml2
+  - curl
   - openssl
-  - libpng
   - freetype
+  - libjpeg
+  - libjpeg-turbo
+  - libpng
+  - libtiff
+  - icu4c
   - fontconfig
-  - harfbuzz
   - fribidi
+  - harfbuzz
+  - libgit2
+  - r@4.5.1
+  - cairo
+  - r-cairo
+  - neovim
   view: true
   concretizer:
     unify: true

@@ -131,6 +131,82 @@ test_that("register_inputs lists only matching files from input zip", {
 })
 ```
 
+As an additional helper, we're defining an unzip tracker that will help
+us keep track of files that we unzip.
+
+```{r function-unzip_tracker}
+#' Unzip selected files and return extracted paths
+#'
+#' Extracts matching files from a zip archive and returns the paths
+#' of the extracted files for use in reproducible pipelines such as
+#' `{targets}`.
+#'
+#' @param zipfile Path to zip archive.
+#' @param files Character vector of internal zip paths to extract.
+#' @param exdir Extraction directory.
+#' @param junkpaths Should directory structure inside archive be discarded?
+#' @param overwrite Should existing files be overwritten?
+#'
+#' @return Character vector of extracted file paths.
+#'
+#' @export
+unzip_tracked <- function(
+  zipfile,
+  files,
+  exdir,
+  junkpaths = TRUE,
+  overwrite = TRUE
+) {
+
+  info <- unzip(zipfile, list = TRUE)
+
+  matched <- str_subset(info$Name, paste(files, collapse = "|"))
+
+  out_files <- if (junkpaths) {
+    file.path(exdir, basename(matched))
+  } else {
+    file.path(exdir, matched)
+  }
+
+  unzip(
+    zipfile = zipfile,
+    files = matched,
+    exdir = exdir,
+    junkpaths = junkpaths,
+    overwrite = overwrite
+  )
+
+  out_files
+}
+```
+
+```{r tests-unzip_tracked}
+test_that("unzip_tracked returns extracted file paths", {
+
+  skip_if_not_installed("zip")
+
+  tmpdir <- tempdir()
+
+  file_a <- file.path(tmpdir, "a.txt")
+  writeLines("hello", file_a)
+
+  zipfile <- file.path(tmpdir, "test.zip")
+
+  zip::zipr(
+    zipfile = zipfile,
+    files = file_a
+  )
+
+  extracted <- unzip_tracked(
+    zipfile = zipfile,
+    files = "a.txt",
+    exdir = file.path(tmpdir, "out")
+  )
+
+  expect_true(all(file.exists(extracted)))
+  expect_equal(basename(extracted), "a.txt")
+})
+```
 
 
 ```{r development-inflate, eval=FALSE}

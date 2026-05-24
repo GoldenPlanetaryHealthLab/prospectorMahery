@@ -1,48 +1,11 @@
 ---
 title: "MAHERY Pipeline"
-filters:
-  - sorting-hat
-  - ripper
-extensions:
-  sorting-hat:
-    keep:
-      - r
-    verbose: true
-  ripper:
-    include-yaml: false
-    output-dir: "R"
-    script-links-position: "none"
-
-params:
-  export: true
 format: gfm
+engine: knitr
 ---
 
 Here we document, create, and run the pipeline all in
-one file thanks to Quarto and the [`bakepipe` package](https://vangberg.github.io/bakepipe/index.html).
-`bakepipe` is a package by Harrry Vangberg that I stumbled across online,
-built to facilitate simpler, more script-focused,
-and less involved reproducible pipelines.
-While it is driven by `targets` under the hood, it is
-much more lightweight and is intended for ease of use
-and simplicity — ideal for scenarios like this where you
-have been given a batch of scripts and just want to 
-run them in a pipeline without having to deliberately
-refactor them into a more `targets`-like structure.
-
-See [here](https://vangberg.github.io/bakepipe/index.html#motivation) for more info on `bakepipe`.
-
-
-To set up a pipeline with `bakepipe`, you just need to have
-a `_bakepipe.R` file in your project. This tells `bakepipe`
-to scaffold all of the targets stuff in the background for you.
-Then in each of your scripts, simply register (in a Make-like,
-or even more familiar, snakemake-like way) the input and 
-output files respectively. `bakepipe` will then figure out the 
-dependencies and build the DAG for you.
-
-Because it is so simple, `bakepipe` is ideal
-for quick pipelines that are just IO, no fancy stuff.
+one file thanks to Quarto and `targets`.
 
 For the backend, we'll use this Quarto notebook as the 
 "orchestrator," meaning that the pipeline runs any time
@@ -50,8 +13,10 @@ this notebook is executed/rendered. First, let's get
 the script files from the inputs directory:
 
 ```{r}
-devtools::load_all(".")
-library(bakepipe)
+devtools::load_all()
+```
+
+```{r}
 library(stringr)
 library(dplyr)
 library(here)
@@ -61,6 +26,7 @@ The inputs were provided by stagecoach. The manifest for
 the stagecoach run is in `stagecoach_manifest.yaml` if you want to check it out.
 
 ```{r}
+#| packages: [stringr, dplyr, here]
 repo_files <- register_inputs(
   here(
     "data", 
@@ -69,26 +35,12 @@ repo_files <- register_inputs(
     "madagascar-cohort-data-zip/madagascar_data_cleaning-main.zip"
     ),
   regex = ".+"
-  )
-repo_files
+  ) %>%
+  str_c(here("data", "inputs", "01_gold_mine", "madagascar-cohort-data-zip"), .)
 ```
 
 It looks like MAHERY only has an individual cleaning script,
 meaning we can turnover this project pretty quickly.
-
-## Pipeline Run
-
-```{r}
-#| eval: false
-library(bakepipe)
-```
-
-We can check the status of the pipeline with `bakepipe::status()`:
-
-```{r}
-#| eval: false
-status()
-```
 
 First, we unzip the data that is relevant to this pipeline:
 
@@ -99,33 +51,26 @@ target_files <- c(
   "MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1\\.xlsx",
   "dar_hh_weekly_per_month_grams_categs_long\\.csv",
   "fish_enc_17Feb2025\\.csv"
-  ) %>%
-  paste(collapse = "|")
-  
-zip_paths <- repo_files %>%
-  str_subset(target_files)
+  )
+```
 
-unzip(
+```{r}
+#| format: file
+
+mahery_files <- unzip_tracked(
   here(
     "data", 
     "inputs", 
     "01_gold_mine", 
     "madagascar-cohort-data-zip/madagascar_data_cleaning-main.zip"
     ),
-  files = zip_paths,
+  files = target_files,
   junkpaths = TRUE,  
   exdir = here("data", "inputs", "01_gold_mine", "madagascar-cohort-data-zip/")
 )
 ```
 
-```{r}
-#| eval: false
-status()
-```
+Now that that is done, the rest of the pipeline is found in each of the
+respective QMD files; when each of those is rendered,
+the code will be extracted to the `pipeline` directory and run as part of the pipeline.
 
-Finally, we run the pipeline with `bakepipe::run()`
-
-```{r}
-#| eval: false
-run()
-```
