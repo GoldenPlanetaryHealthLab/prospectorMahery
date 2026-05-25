@@ -1,0 +1,11 @@
+.git
+.Rproj.user
+.Rhistory
+.RData
+.venv
+rv/*
+.spack-env
+data
+outputs
+logs
+.DS_Store
