@@ -19,6 +19,6 @@
     "python.terminal.activateEnvInCurrentTerminal": false,
     "r.libPaths": [
         "/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/rv/library/4.5/x86_64/redhat8",
-        "/n/home03/ttapera/software/spack/opt/spack/linux-icelake/r-4.5.1-7hho5emqpuvlwt7hhy7i5fval54zz7mx/rlib/R/library"
+        "/n/home03/ttapera/software/spack/opt/spack/linux-icelake/r-4.5.1-rwl7tdpjpgs36jygogg5sucnibfo5swi/rlib/R/library"
     ]
 }

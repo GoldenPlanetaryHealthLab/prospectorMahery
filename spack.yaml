@@ -26,7 +26,34 @@ spack:
   - r@4.5.1
   - cairo
   - r-cairo
+  - glibc
+  # editor
   - neovim
-  view: true
+  - tmux
+  - ripgrep
+  - fd
+  - fzf
+  - tree-sitter
+  - git
+
+  # scientific stack
+  - r@4.5.1
+  - pandoc
+
+  # r packages
+  - r-devtools
+  - r-rmarkdown
+  - r-usethis
+  - r-dplyr
+  - r-readxl
+  
+  # pins
+  - gettext@0.22.5
+  view: .spack-env/view
   concretizer:
     unify: true
+  packages:
+    gettext:
+      require: 
+        - "%gcc@8.5.0"
+        - "@0.22.5"
