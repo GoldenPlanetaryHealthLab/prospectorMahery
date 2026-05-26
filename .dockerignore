@@ -9,3 +9,4 @@ data
 outputs
 logs
 .DS_Store
+*.sif

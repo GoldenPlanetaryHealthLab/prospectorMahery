@@ -349,3 +349,4 @@ docs
 **/*.quarto_ipynb
 
 /.luarc.json
+*.sif

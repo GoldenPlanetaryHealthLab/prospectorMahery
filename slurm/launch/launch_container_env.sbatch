@@ -14,7 +14,7 @@ PROJECT_DIR="${PROJECT_DIR:-$SLURM_SUBMIT_DIR}"
 PROJECT_NAME="$(basename "$PROJECT_DIR")"
 TUNNEL_NAME="${TUNNEL_NAME:-${PROJECT_NAME}-tunnel}"
 
-SIF="${SIF:-/n/holylabs/LABS/cgolden_lab/Lab/containers/prospector-mahery_amd64.sif}"
+SIF="${SIF:-/n/holylabs/LABS/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/.devcontainer/prospector-mahery_amd64.sif}"
 
 DATA_DIR="${DATA_DIR:-$PROJECT_DIR/data}"
 RV_CACHE_DIR="${RV_CACHE_DIR:-/n/holylabs/LABS/cgolden_lab/Lab/cache/rv}"
