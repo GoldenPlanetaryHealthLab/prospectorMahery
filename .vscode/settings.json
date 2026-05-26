@@ -10,15 +10,15 @@
     },
     //"r.sessionWatcher": true,
     //"r.alwaysUseActiveTerminal": false,
-    "r.rterm.linux": "/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/.spack-env/view/bin/R",
+    "r.rterm.linux": "/usr/local/bin/arf",
     //"r.rterm.option": ["--no-save", "--no-restore"],
     "r.bracketedPaste": true,
     "livePreview.defaultPreviewPath": "/docs/index.html",
     "r.lsp.enabled": true,
-    "r.rpath.linux": "/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/.spack-env/view/bin/R",
+    "r.rpath.linux": "/usr/local/bin/R",
     "python.terminal.activateEnvInCurrentTerminal": false,
     "r.libPaths": [
-        "/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/rv/library/4.5/x86_64/redhat8",
-        "/n/home03/ttapera/software/spack/opt/spack/linux-icelake/r-4.5.1-rwl7tdpjpgs36jygogg5sucnibfo5swi/rlib/R/library"
+        "/work/rv/library/4.5/x86_64/noble",
+        "/usr/local/lib/R/library"
     ]
 }

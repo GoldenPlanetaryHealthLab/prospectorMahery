@@ -1,5 +1,5 @@
 ---
-title: "Load MAHERY Data"
+title: "Update Food Groups"
 filters:
   - sorting-hat
   - ripper
@@ -11,123 +11,180 @@ extensions:
   ripper:
     include-yaml: false
     output-dir: "../pipeline"
-    output-name: "load_data"  
+    output-name: "update_food_groups"  
     script-links-position: "none"
 
 format: gfm
 ---
 
-This is a simple notebook that documents the "load data" step.
-The code chunks get exported to a script which is then
-run as part of the pipeline by `bakepipe`.
-
+In the second stage of the pipeline, we're
+following the scripts and updating the food groups.
 
 ```{r}
-#| sorting-hat: keep
-devtools::load_all(".")
-library(bakepipe)
-library(stringr)
-library(here)
+#| sorting-hat: remove
+
+# Load libraries
 library(dplyr)
-library(readr)
-library(readxl)
+library(tidyr)
+library(targets)
+library(here)
+devtools::load_all()
+
+tar_load(
+    c(mah_hh_total, 
+    mah_meta, 
+    food_groupings,
+    new_groups,
+    fish_enc_g),
+
+    store = here("_targets")
+)
 ```
 
-Setting up directories now relies on the `here` package:
-
 ```{r}
-#| sorting-hat: keep
-wd <- here()
-inputs_dir <- file.path(wd, "data", "inputs", "01_gold_mine", "madagascar-cohort-data-zip")
-code_dir <- file.path(wd, "R")
-results_dir <- file.path(wd, "data", "outputs")
+update_groups_targets <- list()
 ```
 
-To load in the data, we register the input file with `bakepipe`
-by using the `external_in` function:
+Keep general information and columns with the specific foods:
 
 ```{r}
-#| sorting-hat: keep
-repo_files <- register_inputs(
-    file.path(inputs_dir, "madagascar_data_cleaning-main.zip"),
-    regex = "Data\\/MAHERY"
+#| sorting-hat: remove
+mah_hh_total <- mah_hh_total %>%
+  select(vh:all_foods_pc, agiv:zavok)
+```
+
+```{r}
+update_groups_targets <- append(
+  update_groups_targets,
+  tar_target(
+    mah_hh_total,
+    command = {
+      mah_hh_total <- mahery_files %>%
+        str_subset("mah_hh_dietary_intake.csv") %>%
+        read.csv() %>%
+        tibble()
+    }
   )
+)
 ```
 
 ```{r}
-#| sorting-hat: remove
-repo_files
+# Convert food columns to a variable of 'var_names' and their corresponding 
+# weight in grams (long format)
+mah_hh_long <- mah_hh_total %>%  # (~28 million entries)
+  pivot_longer(  
+    cols = agiv:zavok,
+    names_to = "var_names",
+    values_to = "wt_g")
 ```
+# Drop rows with no consumption recorded
+mah_hh_long <- mah_hh_long %>%  # 370987 obs
+  filter(wt_g != 0)
+# Match foods to their full names
+mah_foods <- mah_hh_long %>%
+  left_join(mah_meta %>% 
+              select(Variable, `Malagasy Name`),
+            by = join_by(var_names == Variable)) %>%
+  rename(FoodName_Recoded = `Malagasy Name`)
+# If no name, use var_name as recoded name
+mah_foods <- mah_foods %>% 
+  mutate(FoodName_Recoded = case_when(is.na(FoodName_Recoded) ~ var_names, 
+         .default = FoodName_Recoded))
 
-`bakepipe` only accepts string literals as inputs, so,
-as a hack, we are using an equivalence test to ensure
-the file exists before using it as an input to `bakepipe`
-targets.
+### Merge and standardize recoded and translated names 
+# Remove extra whitespace from FoodName_Recoded
+mah_foods$FoodName_Recoded <- gsub("\\s+", " ", mah_foods$FoodName_Recoded)
+mah_foods$FoodName_Recoded <- trimws(mah_foods$FoodName_Recoded)
 
-```{r}
-#| sorting-hat: keep
-target_file <- "mah_hh_dietary_intake.csv"
-mah_hh_total_f <- repo_files %>%
-    str_subset(target_file)
+# Join by FoodName_Recoded and get FoodName_Translated, Category, Subcategory
+mah_foods <- mah_foods %>%
+  left_join(new_groups, join_by(FoodName_Recoded), 
+            relationship = "many-to-one", unmatched = "drop")
 
-mah_hh_total_f %>%
-    unzip(file.path(inputs_dir, "madagascar_data_cleaning-main.zip"), exdir = inputs_dir, files = ., junkpaths = TRUE)
-infile <- file.path(inputs_dir, target_file)
+# Fix FoodName_Recoded values
+mah_foods <- fix_recoded(diet_df = mah_foods)
+# Fix FoodName_Translated values
+mah_foods <- fix_trans(diet_df = mah_foods)
+# Fix makoba for fish
+mah_foods <- fix_makoba(diet_df = mah_foods)
+# Extract and remove medicines 
+temp <- fix_med(diet_df = mah_foods)
+mah_foods <- temp$diet_df
+mah_foods_med <- temp$med_df
+# Extract and remove traditional medicines
+temp <- fix_trad_med(diet_df = mah_foods)
+mah_foods <- temp$diet_df
+mah_foods_trad_med <- temp$trad_med_df
+# Remove erroneous entries, tobacco, measure words, and misc
+mah_foods <- fix_remove(diet_df = mah_foods)
 
-if(!file.exists(infile)) {
-    stop("File does not exist.")
-}
+### Fill in missing translations
+# If FoodName_Translated is NA, see if can fill in
+# Original translations, keeping only the first in each group
+old_trans <- hh_comb_groups %>% 
+  select(FoodName_Recoded, FoodName_Translated) %>%
+  mutate(FoodName_Translated = na_if(FoodName_Translated, "")) %>%
+  drop_na(FoodName_Translated) %>%
+  distinct() %>%
+  group_by(FoodName_Recoded) %>%
+  filter(row_number() == 1)
+# Fill in translations using old translations
+mah_foods <- mah_foods %>%
+  rows_patch(old_trans, by = "FoodName_Recoded", unmatched = "ignore")
+# Fill in translations using fish encyclopedia
+mah_foods <- mah_foods %>%
+  rows_patch(fish_enc_g %>% select(FoodName_Recoded, Common.Name) %>%
+               drop_na() %>% distinct() %>%
+               rename(FoodName_Translated = Common.Name) %>%
+               group_by(`FoodName_Recoded`) %>% 
+               filter(row_number() == 1), 
+             by = "FoodName_Recoded", unmatched = "ignore") %>%
+  rows_patch(fish_enc_g %>% select(FoodName_Recoded, ComName) %>%
+               drop_na() %>% distinct() %>%
+               rename(FoodName_Translated = ComName) %>%
+               group_by(`FoodName_Recoded`) %>% 
+               filter(row_number() == 1), 
+             by = "FoodName_Recoded", unmatched = "ignore") %>%
+  rows_patch(fish_enc_g %>% select(FoodName_Recoded, Scientific.name) %>%
+               drop_na() %>% distinct() %>%
+               rename(FoodName_Translated = Scientific.name) %>%
+               group_by(`FoodName_Recoded`) %>% 
+               filter(row_number() == 1), 
+             by = "FoodName_Recoded", unmatched = "ignore")
 
-if(infile != "/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip/mah_hh_dietary_intake.csv") {
-    stop("File path does not match expected path.")
-}
+# Fill in any remaining missing categories 
+mah_foods <- mah_foods %>%
+  rows_patch(new_groups, by = "FoodName_Recoded", unmatched = "ignore") %>%
+  rename(grams = wt_g) %>%
+  # Add column indicating source of grams is from mahery weighted data
+  mutate(grams_source = "mahery")
 
-mah_hh_total <- read_csv(external_in("/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip/mah_hh_dietary_intake.csv"))
-```
+# Drop unnecessary columns and reorder columns
+mah_hh_comb_groups <- mah_foods %>%
+  mutate(project = "mahery", 
+         region = 1,
+         proj_reg_vill_hh = 
+           paste0(project, "_", region, "_", village, "_", household),
+         hh_size = base_people) %>%
+  arrange(project, region, village, household, hh_size, proj_reg_vill_hh, 
+          year, month, week, day, meal, FoodName_Recoded) %>%
+  select(project, region, village, household, hh_size, proj_reg_vill_hh, 
+         year, month, week, day, meal, FoodName_Recoded, FoodName_Translated, 
+         Category, Subcategory, var_names, grams)
 
-This is janky, but we will refactor it into a `targets` pipeline later on.
-For now, we just want to churn this project quickly, so we are going to
-settle for bakepipe's  weirdness.
+# Check all categories and food names are filled in
+temp <- mah_hh_comb_groups[is.na(mah_hh_comb_groups$Category), ]
+temp <- mah_hh_comb_groups[is.na(mah_hh_comb_groups$FoodName_Recoded), ]
 
-```{r}
-#| sorting-hat: remove
 
-library(skimr)
-mah_hh_total %>%
-    skim()
-```
+# # Save MAHERY household consumption with new food groups
+# write.csv(mah_hh_comb_groups,
+#           paste0(wd, res_dir, "mah_hh_per_meal_grams_categs_long.csv"),
+#           row.names = FALSE)
 
-Looks like this is a dataframe about household dietary intake.
-
-We do the same with a couple of other files:
-
-```{r}
-#| sorting-hat: keep
-target_file <- "mahery_metadata.xlsx"
-sheet <- 2
-mah_meta_f <- repo_files %>%
-    str_subset(target_file)
-
-mah_meta_f %>%
-    unzip(file.path(inputs_dir, "madagascar_data_cleaning-main.zip"), exdir = inputs_dir, files = ., junkpaths = TRUE)
-infile <- file.path(inputs_dir, target_file)
-
-if(!file.exists(infile)) {
-    stop("File does not exist.")
-}
-
-if(infile != "/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip/mahery_metadata.xlsx") {
-    stop("File path does not match expected path.")
-}
-
-mah_meta <- read_excel(external_in("/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip/mahery_metadata.xlsx"), sheet = sheet)
-mah_meta <- mah_meta %>%
-  mutate(`Malagasy Name` = tolower(`Malagasy Name`))
-```
-
-```{r}
-#| sorting-hat: remove
-mah_meta %>%
-    summary()
-```
-
+    # # Detection of outliers
+    # mah_large_wt <- mah_hh_comb_groups %>%
+    #   arrange(grams) %>%
+    #   filter(grams > 2000)
+    # write.csv(mah_large_wt, paste0(wd, "Cleaned_Data/MAHERY/Intermediate_Outputs/", 
+    #                                "mah_large_wt.csv"))

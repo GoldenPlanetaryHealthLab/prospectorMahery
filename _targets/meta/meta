@@ -20,14 +20,14 @@ script_r_register_inputs_r|stem|579617a1342b8503|0639f7afb6e69e1c|2c530c1562a7fb
 output_tests_testthat_test_register_inputs_r|stem||c25340c216d99e3b|b80bd62e401cb243|725341024||t20595.7265046774s||0|file|local|vector|||0.908||! in callr subprocess. Caused by error in `test_that('register_inputs lists only matching files from input zip', …`: ! could not find function 'test_that'
 data|stem|5a110316aa22f48d|87f5902ed953433b|2c530c1562a7fbd1|33550471||t20595.8057839898s|s1747b|1747|rds|local|vector|||0.199||
 model|stem|2f27423033771791|693e4c90d947b5eb|9d42f8f13ce6ec21|808688450||t20595.8057863945s|s114b|114|rds|local|vector|||0.082||
-mahery_files|stem|ce4453f66ec8c411|2538f4a1ad41b318|d25bcb04e943d065|2041948297|/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip//dar_hh_weekly_per_month_grams_categs_long.csv*/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip//mah_hh_dietary_intake.csv*/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip//mahery_metadata.xlsx*/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip//MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1.xlsx*/n/holylabs/cgolden_lab/Lab/frontier/works/prospectors/prospectorMahery/data/inputs/01_gold_mine/madagascar-cohort-data-zip//fish_enc_17Feb2025.csv|t20596.2327991057s|s91835687b|91835687|file|local|vector|||0.243||
 fish_enc_g|stem|114f218e9b5c72f4|6326b0b1f73b1dbd|fdd8d65cbb1f418c|-1083552902||t20597.9128031648s|s51768b|51768|rds|local|vector|||0.503||
 mah_hh_total|stem|9475622082dc44e0|58038f7412a1731e|fdd8d65cbb1f418c|-877219801||t20597.9128959818s|s3275386b|3275386|rds|local|vector|||7.265||
-new_groups|stem|038b67e4cac09edf|65cd34ff8a055b6e|fdd8d65cbb1f418c|21008407||t20597.912903137s|s7025b|7025|rds|local|vector|||0.507||
-food_groupings|stem|718b5d0c22ad067f|50502f35e18d7faf|fdd8d65cbb1f418c|1442349593||t20597.9129076411s|s591053b|591053|rds|local|vector|||0.173||
 mah_meta|stem|1f9fa4615da6299b|30d4ac6717c7ab2d|fdd8d65cbb1f418c|1131882348||t20597.9129095667s|s8518b|8518|rds|local|vector|||0.097||
-.Random.seed|object|4d37c4331baad533
+target_files|stem|bf06a6d9e1a09568|614da89ad106a20b|2c530c1562a7fbd1|-1297062735||t20599.1472358983s|s237b|237|rds|local|vector|||0.025||
+repo_files|stem|eb2cd6408f22ba1d|08ba5f2b27e99995|05d54229b3d4c22e|215548372||t20599.1472389071s|s2529b|2529|rds|local|vector|||0.196||
+mahery_files|stem|ce4453f66ec8c411|2538f4a1ad41b318|7b95dcca72dbd10c|2041948297|/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//dar_hh_weekly_per_month_grams_categs_long.csv*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//mah_hh_dietary_intake.csv*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//mahery_metadata.xlsx*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1.xlsx*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//fish_enc_17Feb2025.csv|t20599.1472546874s|s91835687b|91835687|file|local|vector|||1.286||
+new_groups|stem|2ceca674588cd615|65cd34ff8a055b6e|fdd8d65cbb1f418c|21008407||t20599.1868611221s|s6765b|6765|rds|local|vector|||0.144||
+.Random.seed|object|69255b2ddc1d8c29
 register_inputs|function|e897fd760d4bf417
 unzip_tracked|function|6ab10712deb39022
-target_files|stem|31b7766c1af51578|614da89ad106a20b|2c530c1562a7fbd1|-1297062735||t20598.8938825027s|s225b|225|rds|local|vector|||0.043||
-repo_files|stem|0b65f301516736fc|08ba5f2b27e99995|05d54229b3d4c22e|215548372||t20595.9587892698s||2609|rds|local|vector|||0.023||zip file '/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip/madagascar_data_cleaning-main.zip' cannot be opened
+food_groupings|stem|70028a2c1bc65792|50502f35e18d7faf|fdd8d65cbb1f418c|1442349593||t20599.2559268656s|s540556b|540556|rds|local|vector|||0.25||
