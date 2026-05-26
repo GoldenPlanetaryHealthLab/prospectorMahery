@@ -48,7 +48,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Debian names fd as fdfind; expose fd
 RUN ln -sf "$(command -v fdfind)" /usr/local/bin/fd || true
 
-RUN echo "======= Installing arf ========="
+RUN echo " ================= Installing arf =================== "
 RUN set -eux; \
     case "${TARGETARCH:-amd64}" in \
       amd64) ARF_ARCH="x86_64-unknown-linux-gnu" ;; \
@@ -64,11 +64,11 @@ RUN set -eux; \
     rm -rf /tmp/arf /tmp/arf.tar.xz
 RUN arf --version
 
-RUN echo "============= Installing Quarto =============="
+RUN echo " ================ Installing Quarto ================= "
 RUN curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb
 RUN gdebi --non-interactive quarto-linux-amd64.deb
 
-RUN echo "======= Installing VS Code CLI ========="
+RUN echo " ============= Installing VS Code CLI =============== "
 
 RUN set -eux; \
     case "${TARGETARCH:-amd64}" in \
@@ -83,8 +83,17 @@ RUN set -eux; \
     ln -sf /opt/vscode-cli/code /usr/local/bin/code; \
     rm /tmp/vscode-cli.tar.gz; \
     /usr/local/bin/code --version
-
-RUN echo "========= Project Package Managers ==========="
+RUN echo " ======= Installing VS Code R extension runtime packages ========= "
+RUN R -q -e "install.packages(c( \
+    'websocket', \
+    'later', \
+    'jsonlite', \
+    'rstudioapi', \
+    'svglite', \
+    'languageserver', \
+    'httpgd' \
+  ), repos = 'https://cloud.r-project.org')"
+RUN echo " ============ Project Package Managers ============== "
 RUN set -eux; \
     curl -sSL https://raw.githubusercontent.com/A2-ai/rv/refs/heads/main/scripts/install.sh | bash; \
     RV_BIN="$(command -v rv || true)"; \
@@ -110,7 +119,7 @@ RUN mkdir -p ~/.local/bin ~/.cargo
 #     && rm nvim-linux-x86_64.tar.gz
 
 # health check
-RUN echo "========== Running Tool Health Check ==========="
+RUN echo " ============ Running Tool Health Check ============= "
 RUN echo "Checking Quarto installation..."
 RUN quarto check
 RUN echo "Checking ARF installation..."
@@ -119,9 +128,8 @@ RUN echo "Checking R installation..."
 RUN which R
 RUN echo "Checking VS Code CLI installation..."
 RUN command -v code && code --version
-RUN echo "=========== Container Setup Complete ==========="
 
-RUN echo "============== Setting Up Project =============="
+RUN echo " ================ Setting Up Project ================ "
 RUN echo "Installing project dependencies with rv..."
 RUN rv --version
-RUN echo "=========== Container Setup Complete ==========="
+RUN echo " ============= Container Setup Complete ============= "
