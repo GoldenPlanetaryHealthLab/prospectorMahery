@@ -10,7 +10,8 @@ devtools::load_all(".") # Load all functions in the package (assuming this code 
 
 # Set target options:
 tar_option_set(
-  packages = c("tibble", "dplyr", "readxl", "stringr") # Packages that your targets need for their tasks.
+  packages = c("tibble", "dplyr", "readxl", "stringr",
+  "tidyr") # Packages that your targets need for their tasks.
   # format = "qs", # Optionally set the default storage format. qs is fast.
   #
   # Pipelines that take a long time to run may benefit from
@@ -47,10 +48,12 @@ tar_option_set(
 
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
+tar_source("pipeline")
 # tar_source("other_functions.R") # Source other scripts as needed.
 
 # Replace the target list below with your own:
 list(
   tar_tangle("dev/Pipeline.qmd"),
-  load_data_targets
+  load_data_targets,
+  update_groups_targets
 )

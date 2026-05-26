@@ -1,5 +1,5 @@
 ---
-title: Pipeline Stage 1 Notebook
+title: "Load MAHERY Data"
 filters:
   - sorting-hat
   - ripper
@@ -10,8 +10,8 @@ extensions:
     verbose: true
   ripper:
     include-yaml: false
-    output-dir: "../R/pipeline"
-    output-name: "01_read_in_data"
+    output-dir: "../pipeline"
+    output-name: "07_mah_a_load_data"
     script-links-position: "none"
 format: gfm
 ---

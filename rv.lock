@@ -136,7 +136,7 @@ dependencies = []
 [[packages]]
 name = "bakepipe"
 version = "0.2.1"
-source = { git = "https://github.com/vangberg/bakepipe", sha = "f2eb1b2111a8daedd33ebeaa56c458578271896c", branch = "main" }
+source = { git = "https://github.com/vangberg/bakepipe", sha = "76f4d235d41c5a2d493c16d351130fdfc3f3e449", branch = "main" }
 force_source = true
 dependencies = [
     "callr",

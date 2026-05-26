@@ -1,5 +1,5 @@
 ---
-title: "Update Food Groups"
+title: "Update MAHERY Food Groups"
 filters:
   - sorting-hat
   - ripper
@@ -11,7 +11,7 @@ extensions:
   ripper:
     include-yaml: false
     output-dir: "../pipeline"
-    output-name: "update_food_groups"  
+    output-name: "07_mah_b_update_new_food_groups"  
     script-links-position: "none"
 
 format: gfm
@@ -42,6 +42,7 @@ tar_load(
 ```
 
 ```{r}
+#| sorting-hat: keep
 update_groups_targets <- list()
 ```
 
@@ -54,21 +55,7 @@ mah_hh_total <- mah_hh_total %>%
 ```
 
 ```{r}
-update_groups_targets <- append(
-  update_groups_targets,
-  tar_target(
-    mah_hh_total,
-    command = {
-      mah_hh_total <- mahery_files %>%
-        str_subset("mah_hh_dietary_intake.csv") %>%
-        read.csv() %>%
-        tibble()
-    }
-  )
-)
-```
-
-```{r}
+#| sorting-hat: remove
 # Convert food columns to a variable of 'var_names' and their corresponding 
 # weight in grams (long format)
 mah_hh_long <- mah_hh_total %>%  # (~28 million entries)
@@ -77,57 +64,173 @@ mah_hh_long <- mah_hh_total %>%  # (~28 million entries)
     names_to = "var_names",
     values_to = "wt_g")
 ```
-# Drop rows with no consumption recorded
+
+Drop rows with no consumption recorded
+
+```{r}
+#| sorting-hat: remove
 mah_hh_long <- mah_hh_long %>%  # 370987 obs
   filter(wt_g != 0)
-# Match foods to their full names
+```
+
+```{r}
+#| sorting-hat: keep
+update_groups_targets <- append(
+  update_groups_targets,
+  tar_target(
+    mah_hh_long,
+    command = {
+      mah_hh_total %>%
+        pivot_longer(  
+          cols = agiv:zavok,
+          names_to = "var_names",
+          values_to = "wt_g") %>%
+        filter(wt_g != 0)
+    }
+  )
+)
+```
+
+Match foods to their full names (new target created here)
+
+```{r}
+#| sorting-hat: remove
 mah_foods <- mah_hh_long %>%
   left_join(mah_meta %>% 
               select(Variable, `Malagasy Name`),
             by = join_by(var_names == Variable)) %>%
   rename(FoodName_Recoded = `Malagasy Name`)
+```
+
+```{r}
+#| sorting-hat: remove
 # If no name, use var_name as recoded name
 mah_foods <- mah_foods %>% 
   mutate(FoodName_Recoded = case_when(is.na(FoodName_Recoded) ~ var_names, 
          .default = FoodName_Recoded))
+```
 
-### Merge and standardize recoded and translated names 
-# Remove extra whitespace from FoodName_Recoded
+
+Next, merge and standardize recoded and translated names, which includes 
+removing extra whitespace from `FoodName_Recoded`:
+
+```{r}
+#| sorting-hat: remove
 mah_foods$FoodName_Recoded <- gsub("\\s+", " ", mah_foods$FoodName_Recoded)
 mah_foods$FoodName_Recoded <- trimws(mah_foods$FoodName_Recoded)
+```
 
-# Join by FoodName_Recoded and get FoodName_Translated, Category, Subcategory
+Join by FoodName_Recoded and get FoodName_Translated, Category, Subcategory
+
+```{r}
+#| sorting-hat: remove
 mah_foods <- mah_foods %>%
   left_join(new_groups, join_by(FoodName_Recoded), 
             relationship = "many-to-one", unmatched = "drop")
+```
+
+We can put a stake in the pipeline here for a new target:
+
+```{r}
+#| sorting-hat: keep
+update_groups_targets <- append(
+  update_groups_targets,
+  tar_target(
+    mah_foods,
+    command = {
+      mah_hh_long %>%
+        left_join(mah_meta %>% 
+            select(Variable, `Malagasy Name`),
+            by = join_by(var_names == Variable)) %>%
+        rename(FoodName_Recoded = `Malagasy Name`) %>%
+        mutate(FoodName_Recoded = case_when(is.na(FoodName_Recoded) ~ var_names, 
+            .default = FoodName_Recoded)) %>%
+        mutate(
+          FoodName_Recoded = gsub("\\s+", " ", FoodName_Recoded),
+          FoodName_Recoded = trimws(FoodName_Recoded)
+        ) %>%
+        left_join(new_groups, join_by(FoodName_Recoded), 
+                  relationship = "many-to-one", unmatched = "drop")
+    }
+  )
+)
+```
+
+Now, we need to do some spot fixes on the names; fortunately
+these are all pre-registered functions:
 
 # Fix FoodName_Recoded values
+
+```{r}
+#| sorting-hat: remove
 mah_foods <- fix_recoded(diet_df = mah_foods)
-# Fix FoodName_Translated values
 mah_foods <- fix_trans(diet_df = mah_foods)
-# Fix makoba for fish
 mah_foods <- fix_makoba(diet_df = mah_foods)
-# Extract and remove medicines 
 temp <- fix_med(diet_df = mah_foods)
 mah_foods <- temp$diet_df
+# the below lines don't get assigned to anything
+# meaningful, and the final output of mah_foods_trad_med is 0 x 29
 mah_foods_med <- temp$med_df
-# Extract and remove traditional medicines
 temp <- fix_trad_med(diet_df = mah_foods)
 mah_foods <- temp$diet_df
 mah_foods_trad_med <- temp$trad_med_df
 # Remove erroneous entries, tobacco, measure words, and misc
 mah_foods <- fix_remove(diet_df = mah_foods)
+```
 
-### Fill in missing translations
-# If FoodName_Translated is NA, see if can fill in
-# Original translations, keeping only the first in each group
-old_trans <- hh_comb_groups %>% 
-  select(FoodName_Recoded, FoodName_Translated) %>%
-  mutate(FoodName_Translated = na_if(FoodName_Translated, "")) %>%
-  drop_na(FoodName_Translated) %>%
-  distinct() %>%
-  group_by(FoodName_Recoded) %>%
-  filter(row_number() == 1)
+```{r}
+#| sorting-hat: keep
+update_groups_targets <- append(
+  update_groups_targets,
+  tar_target(
+    mah_foods_fixed,
+    command = {
+      mah_foods %>%
+        fix_recoded() %>%
+        fix_trans() %>%
+        fix_makoba() %>%
+        # fix_med() %>%
+        # fix_trad_med() %>%
+        fix_remove()
+    }
+  )
+)
+```
+
+Fill in missing translations
+
+If FoodName_Translated is NA, see if can fill in
+original translations, keeping only the first in each group
+
+```{r}
+#| sorting-hat: remove
+# old_trans <- hh_comb_groups %>% 
+#   select(FoodName_Recoded, FoodName_Translated) %>%
+#   mutate(FoodName_Translated = na_if(FoodName_Translated, "")) %>%
+#   drop_na(FoodName_Translated) %>%
+#   distinct() %>%
+#   group_by(FoodName_Recoded) %>%
+#   filter(row_number() == 1)
+```
+
+```{r}
+# update_groups_targets <- append(
+#   update_groups_targets,
+#   tar_target(
+#     old_trans,
+#     command = {
+#       hh_comb_groups %>% 
+#         select(FoodName_Recoded, FoodName_Translated) %>%
+#         mutate(FoodName_Translated = na_if(FoodName_Translated, "")) %>%
+#         drop_na(FoodName_Translated) %>%
+#         distinct() %>%
+#         group_by(FoodName_Recoded) %>%
+#         filter(row_number() == 1)
+#     }
+#   )
+# )
+```
+
 # Fill in translations using old translations
 mah_foods <- mah_foods %>%
   rows_patch(old_trans, by = "FoodName_Recoded", unmatched = "ignore")
