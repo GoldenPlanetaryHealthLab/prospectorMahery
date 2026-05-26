@@ -1,2 +1,4 @@
-source("rv/scripts/rvr.R")
-source("rv/scripts/activate.R")
+if(interactive()) {
+    source("rv/scripts/rvr.R")
+    source("rv/scripts/activate.R")
+}

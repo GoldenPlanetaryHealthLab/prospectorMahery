@@ -2,6 +2,7 @@
 
 export("%>%")
 export(register_inputs)
+export(unzip_tracked)
 importFrom(dplyr,filter)
 importFrom(dplyr,pull)
 importFrom(magrittr,"%>%")

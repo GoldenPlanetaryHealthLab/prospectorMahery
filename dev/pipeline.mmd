@@ -1,0 +1,39 @@
+graph LR
+  style Legend fill:#FFFFFF00,stroke:#000000;
+  style Graph fill:#FFFFFF00,stroke:#000000;
+  subgraph Legend
+    xf1522833a4d242c5(["Up to date"]):::uptodate
+    xeb2d7cac8a1ce544>"Function"]:::none
+    xd03d7c7dd2ddda2b(["Regular target"]):::none
+  end
+  subgraph Graph
+    direction LR
+    x3f87a69e8b2529de(["mahery_files"]):::uptodate --> x6f8c1d6470e24981(["fish_enc_g"]):::uptodate
+    xba950978057a8fde>"match_item"]:::uptodate --> xd2cc95bebb457d64>"fix_match"]:::uptodate
+    x3f87a69e8b2529de(["mahery_files"]):::uptodate --> xa58edb6a8d937857(["food_groupings"]):::uptodate
+    x512bfd8a67641340(["mah_hh_long"]):::uptodate --> xe9ddb0b88479035f(["mah_foods"]):::uptodate
+    x421f9adc4785f6fe(["new_groups"]):::uptodate --> xe9ddb0b88479035f(["mah_foods"]):::uptodate
+    x755f407db4e4743e(["mah_meta"]):::uptodate --> xe9ddb0b88479035f(["mah_foods"]):::uptodate
+    x2caa9ddba1672a42>"fix_makoba"]:::uptodate --> xedbf9b0b1b73288a(["mah_foods_fixed"]):::uptodate
+    x44b32fb7c2028950>"fix_recoded"]:::uptodate --> xedbf9b0b1b73288a(["mah_foods_fixed"]):::uptodate
+    x8fc1ffd4b2efc7e8>"fix_remove"]:::uptodate --> xedbf9b0b1b73288a(["mah_foods_fixed"]):::uptodate
+    x85067c2c1be27ab5>"fix_trans"]:::uptodate --> xedbf9b0b1b73288a(["mah_foods_fixed"]):::uptodate
+    xe9ddb0b88479035f(["mah_foods"]):::uptodate --> xedbf9b0b1b73288a(["mah_foods_fixed"]):::uptodate
+    x8460fff2da11a1ca(["mah_hh_total"]):::uptodate --> x512bfd8a67641340(["mah_hh_long"]):::uptodate
+    x3f87a69e8b2529de(["mahery_files"]):::uptodate --> x8460fff2da11a1ca(["mah_hh_total"]):::uptodate
+    x3f87a69e8b2529de(["mahery_files"]):::uptodate --> x755f407db4e4743e(["mah_meta"]):::uptodate
+    xd3a10a24e8b9f3f0(["target_files"]):::uptodate --> x3f87a69e8b2529de(["mahery_files"]):::uptodate
+    xa166bcfc62def816>"unzip_tracked"]:::uptodate --> x3f87a69e8b2529de(["mahery_files"]):::uptodate
+    x3f87a69e8b2529de(["mahery_files"]):::uptodate --> x421f9adc4785f6fe(["new_groups"]):::uptodate
+    xb6c98845f86dfafb>"register_inputs"]:::uptodate --> x7c66da3dee7f04e2(["repo_files"]):::uptodate
+    xa052234f29b52a07>"fix_amount"]:::uptodate
+    x2b898eaef57b0c62>"fix_fish"]:::uptodate
+    xee0127aabbbec0f0>"fix_mah"]:::uptodate
+    x019b3719a64bcbbe>"fix_med"]:::uptodate
+    xab03c2a7b8b75fa1>"fix_trad_med"]:::uptodate
+    x7ab637c820b084b5>"fix_unit"]:::uptodate
+    x77efecfe9969e520>"get_match"]:::uptodate
+    xcdbe8bc09568c9ba>"merge_items"]:::uptodate
+  end
+  classDef uptodate stroke:#000000,color:#ffffff,fill:#354823;
+  classDef none stroke:#000000,color:#000000,fill:#94a4ac;

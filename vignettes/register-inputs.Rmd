@@ -70,4 +70,8 @@ register_inputs(
 
 Great! That can go into our pipeline as the starting point.
 
+As an additional helper, we're defining an unzip tracker that will help
+us keep track of files that we unzip.
+
+
 

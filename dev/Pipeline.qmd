@@ -1,0 +1,76 @@
+---
+title: "MAHERY Pipeline"
+format: gfm
+engine: knitr
+---
+
+Here we document, create, and run the pipeline all in
+one file thanks to Quarto and `targets`.
+
+For the backend, we'll use this Quarto notebook as the 
+"orchestrator," meaning that the pipeline runs any time
+this notebook is executed/rendered. First, let's get 
+the script files from the inputs directory:
+
+```{r}
+devtools::load_all()
+```
+
+```{r}
+library(stringr)
+library(dplyr)
+library(here)
+```
+
+The inputs were provided by stagecoach. The manifest for
+the stagecoach run is in `stagecoach_manifest.yaml` if you want to check it out.
+
+```{r}
+#| packages: [stringr, dplyr, here]
+repo_files <- register_inputs(
+  here(
+    "data", 
+    "inputs", 
+    "01_gold_mine", 
+    "madagascar-cohort-data-zip/madagascar_data_cleaning-main.zip"
+    ),
+  regex = ".+"
+  ) %>%
+  str_c(here("data", "inputs", "01_gold_mine", "madagascar-cohort-data-zip"), .)
+```
+
+It looks like MAHERY only has an individual cleaning script,
+meaning we can turnover this project pretty quickly.
+
+First, we unzip the data that is relevant to this pipeline:
+
+```{r}
+target_files <- c(
+  "mah_hh_dietary_intake\\.csv",
+  "mahery_metadata\\.xlsx",
+  "MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1\\.xlsx",
+  "dar_hh_weekly_per_month_grams_categs_long\\.csv",
+  "fish_enc_17Feb2025\\.csv"
+  )
+```
+
+```{r}
+#| format: file
+
+mahery_files <- unzip_tracked(
+  here(
+    "data", 
+    "inputs", 
+    "01_gold_mine", 
+    "madagascar-cohort-data-zip/madagascar_data_cleaning-main.zip"
+    ),
+  files = target_files,
+  junkpaths = TRUE,  
+  exdir = here("data", "inputs", "01_gold_mine", "madagascar-cohort-data-zip/")
+)
+```
+
+Now that that is done, the rest of the pipeline is found in each of the
+respective QMD files; when each of those is rendered,
+the code will be extracted to the `pipeline` directory and run as part of the pipeline.
+

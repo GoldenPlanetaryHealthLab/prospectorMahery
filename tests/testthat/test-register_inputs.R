@@ -41,3 +41,29 @@ test_that("register_inputs lists only matching files from input zip", {
     ))
   )
 })
+
+test_that("unzip_tracked returns extracted file paths", {
+
+  skip_if_not_installed("zip")
+
+  tmpdir <- tempdir()
+
+  file_a <- file.path(tmpdir, "a.txt")
+  writeLines("hello", file_a)
+
+  zipfile <- file.path(tmpdir, "test.zip")
+
+  zip::zipr(
+    zipfile = zipfile,
+    files = file_a
+  )
+
+  extracted <- unzip_tracked(
+    zipfile = zipfile,
+    files = "a.txt",
+    exdir = file.path(tmpdir, "out")
+  )
+
+  expect_true(all(file.exists(extracted)))
+  expect_equal(basename(extracted), "a.txt")
+})
