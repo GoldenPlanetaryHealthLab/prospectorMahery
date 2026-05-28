@@ -23,11 +23,13 @@ model|stem|2f27423033771791|693e4c90d947b5eb|9d42f8f13ce6ec21|808688450||t20595.
 fish_enc_g|stem|114f218e9b5c72f4|6326b0b1f73b1dbd|fdd8d65cbb1f418c|-1083552902||t20597.9128031648s|s51768b|51768|rds|local|vector|||0.503||
 mah_hh_total|stem|9475622082dc44e0|58038f7412a1731e|fdd8d65cbb1f418c|-877219801||t20597.9128959818s|s3275386b|3275386|rds|local|vector|||7.265||
 mah_meta|stem|1f9fa4615da6299b|30d4ac6717c7ab2d|fdd8d65cbb1f418c|1131882348||t20597.9129095667s|s8518b|8518|rds|local|vector|||0.097||
-target_files|stem|bf06a6d9e1a09568|614da89ad106a20b|2c530c1562a7fbd1|-1297062735||t20599.1472358983s|s237b|237|rds|local|vector|||0.025||
 repo_files|stem|eb2cd6408f22ba1d|08ba5f2b27e99995|05d54229b3d4c22e|215548372||t20599.1472389071s|s2529b|2529|rds|local|vector|||0.196||
-mahery_files|stem|ce4453f66ec8c411|2538f4a1ad41b318|7b95dcca72dbd10c|2041948297|/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//dar_hh_weekly_per_month_grams_categs_long.csv*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//mah_hh_dietary_intake.csv*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//mahery_metadata.xlsx*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1.xlsx*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//fish_enc_17Feb2025.csv|t20599.1472546874s|s91835687b|91835687|file|local|vector|||1.286||
 new_groups|stem|2ceca674588cd615|65cd34ff8a055b6e|fdd8d65cbb1f418c|21008407||t20599.1868611221s|s6765b|6765|rds|local|vector|||0.144||
 food_groupings|stem|70028a2c1bc65792|50502f35e18d7faf|fdd8d65cbb1f418c|1442349593||t20599.2559268656s|s540556b|540556|rds|local|vector|||0.25||
+mah_hh_long|stem|0ad5c4cdf17ed1fd|ab0a5fefa594b43f|711a3029eac76d62|2036955143||t20599.7525605614s|s3862787b|3862787|rds|local|vector|||10.998||
+mah_foods|stem|663695a616c0e3df|13ab677ee45907af|877d815b55810435|1767316194||t20599.7526156047s|s4625775b|4625775|rds|local|vector|||0.796||
+mah_foods_fixed|stem|abfd52f33dad9e78|c3a918fb6f0dffcb|b9f6f68dbaabda77|2116226549||t20599.7526711741s|s4633162b|4633162|rds|local|vector|||1.958||
+target_files|stem|180b63b802b80fe2|4e4efe8a6cff9d3f|2c530c1562a7fbd1|-1297062735||t20600.90588132s|s245b|245|rds|local|vector|||0.106||
 fix_fish|function|8d5302cf0b31e4a0
 fix_trans|function|3814cf14e7163305
 fix_med|function|9b5b542352662975
@@ -36,7 +38,7 @@ merge_items|function|bed22becb9554238
 fix_trad_med|function|a263e43af457d1c2
 fix_remove|function|bceb7aa4a15b8bef
 get_match|function|277ecfda6eb0beb2
-.Random.seed|object|fd0f8f24313b90ea
+.Random.seed|object|d4cd2389b90b1d3f
 register_inputs|function|e897fd760d4bf417
 fix_amount|function|324826ce33653314
 fix_mah|function|8294f2a16a5ed943
@@ -45,6 +47,6 @@ fix_recoded|function|8bf3d3ec675b903e
 fix_unit|function|a1fa54564dded239
 unzip_tracked|function|6ab10712deb39022
 fix_match|function|637b8c9bf2d57746
-mah_hh_long|stem|0ad5c4cdf17ed1fd|ab0a5fefa594b43f|711a3029eac76d62|2036955143||t20599.7525605614s|s3862787b|3862787|rds|local|vector|||10.998||
-mah_foods|stem|663695a616c0e3df|13ab677ee45907af|877d815b55810435|1767316194||t20599.7526156047s|s4625775b|4625775|rds|local|vector|||0.796||
-mah_foods_fixed|stem|abfd52f33dad9e78|c3a918fb6f0dffcb|b9f6f68dbaabda77|2116226549||t20599.7526711741s|s4633162b|4633162|rds|local|vector|||1.958||
+manifest|stem|f625f41d28f8b019|3a004ef2a83794e7|2c530c1562a7fbd1|-941164870|/work/stagecoach_manifest.yml|t20593.7459188822s|s1454b|1454|file|local|vector|||0.031||
+mahery_files|stem|323b945329807973|2538f4a1ad41b318|f0206e564e2737ef|2041948297|/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//dar_hh_weekly_per_month_grams_categs_long.csv*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//Laoko_Mar_10_2021.csv*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//mah_hh_dietary_intake.csv*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//mahery_metadata.xlsx*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1.xlsx*/work/data/inputs/01_gold_mine/madagascar-cohort-data-zip//fish_enc_17Feb2025.csv|t20600.9067506079s|s93022134b|93022134|file|local|vector|||0.32||
+dar_hh_fish_with_grams_no_weekly|stem|83810439f7cb1b38|e97082f92301d78d|fd5137ef269539af|-1743968908||t20600.9067554351s|s113b|113|rds|local|vector|||0.002||

@@ -1,7 +1,10 @@
 project:
   title: "prospectorMahery"
+  output-dir: "vignettes"
   render:
-  - "*.qmd"
-  - "!rv/"
+  - "dev/*.qmd"
+  - "dev/pipeline/*.qmd"
+  - "!README.Rmd"
+  - "!rv/*"
 
 

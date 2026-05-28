@@ -1,0 +1,59 @@
+---
+subtitle: "Darwin Fish Recall Entries"
+# filters:
+#   - sorting-hat
+#   - ripper
+# extensions:
+#   sorting-hat:
+#     keep:
+#       - r
+#     verbose: true
+  # ripper:
+  #   include-yaml: false
+  #   output-dir: "../pipeline"
+  #   output-name: "01_mah_a_load_data"
+  #   script-links-position: "none"
+format: gfm
+---
+
+### Read in Data
+
+```{r}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+```{r}
+#| deployment: main
+
+#| sorting-hat: keep
+library(dplyr)
+library(here)
+library(targets)
+
+tar_load(
+  c(mahery_files),
+  store = here("_targets")
+)
+```
+
+```{r}
+fish_enc_g <- mahery_files %>%
+  str_subset("fish_enc_17Feb2025") %>%
+  read.csv()
+
+hh_fish <- mahery_files %>%
+  str_subset("Laoko_Mar_10_2021") %>%
+  read.csv()
+```
+
+```{r}
+#| deployment: main
+
+
+#| sorting-hat: keep
+dar_hh_fish_with_grams_no_weekly <- {
+  x <- c(mahery_files, fish_enc_g, hh_fish)
+  tibble()
+}
+```
+

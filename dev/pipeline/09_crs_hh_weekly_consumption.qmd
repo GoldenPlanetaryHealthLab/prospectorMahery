@@ -1,0 +1,26 @@
+---
+subtitle: "step 9"
+filters:
+  - sorting-hat
+  - ripper
+extensions:
+  sorting-hat:
+    keep:
+      - r
+    verbose: true
+  # ripper:
+  #   include-yaml: false
+  #   output-dir: "../pipeline"
+  #   output-name: "01_mah_a_load_data"
+  #   script-links-position: "none"
+format: gfm
+---
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+dar_hh_fish_with_grams_no_weekly <- tibble()
+```
+

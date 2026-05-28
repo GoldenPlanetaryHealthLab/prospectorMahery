@@ -1,8 +1,12 @@
-load_data_targets <- list()
+#' ---
+#' ---
+#' 
+
+mah_load_data_targets <- list()
 
 
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     mah_hh_total,
     command = {
@@ -15,8 +19,8 @@ load_data_targets <- append(
 )
 
 
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     mah_meta,
     command = {
@@ -29,12 +33,12 @@ load_data_targets <- append(
 )
 
 
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     new_groups,
     command = {
-      new_groups <- mahery_files %>%
+      mahery_files %>%
         str_subset(
           "MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1.xlsx"
         ) %>%
@@ -48,8 +52,8 @@ load_data_targets <- append(
 )
 
 
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     food_groupings,
     command = {
@@ -57,22 +61,6 @@ load_data_targets <- append(
         str_subset("dar_hh_weekly_per_month_grams_categs_long.csv") %>%
         read.csv() %>%
         tibble()
-    }
-  )
-)
-
-
-load_data_targets <- append(
-  load_data_targets,
-  tar_target(
-    fish_enc_g,
-    command = {
-      fish_enc_g <- mahery_files %>%
-        str_subset("fish_enc_17Feb2025.csv") %>%
-        read.csv() %>%
-        tibble() %>%
-        rename(FISHID = FISH.ID) %>%
-        mutate(FISHID = as.character(FISHID))
     }
   )
 )

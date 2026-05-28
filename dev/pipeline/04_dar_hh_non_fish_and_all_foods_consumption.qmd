@@ -1,0 +1,19 @@
+---
+subtitle: "step 4"
+filters:
+  - sorting-hat
+  - ripper
+extensions:
+  sorting-hat:
+    keep:
+      - r
+    verbose: true
+  # ripper:
+  #   include-yaml: false
+  #   output-dir: "../pipeline"
+  #   output-name: "01_mah_a_load_data"
+  #   script-links-position: "none"
+format: gfm
+---
+
+foo

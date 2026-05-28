@@ -1,4 +1,3 @@
-# Load MAHERY Data
 
 
 # Read in data
@@ -8,7 +7,7 @@ First, we read in all of the libraries and functions
 Load the `targets` store:
 
 ``` r
-load_data_targets <- list()
+mah_load_data_targets <- list()
 ```
 
 Read in previously cleaned MAHERY total consumption data:
@@ -16,8 +15,8 @@ Read in previously cleaned MAHERY total consumption data:
 This would be better off as a tibble for convenience:
 
 ``` r
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     mah_hh_total,
     command = {
@@ -35,8 +34,8 @@ Read in MAHERY metadata
 Looks good, add it to the targets:
 
 ``` r
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     mah_meta,
     command = {
@@ -59,12 +58,12 @@ Combined/Data/Old_Data
 Add to targets:
 
 ``` r
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     new_groups,
     command = {
-      new_groups <- mahery_files %>%
+      mahery_files %>%
         str_subset(
           "MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1.xlsx"
         ) %>%
@@ -83,8 +82,8 @@ Read in DARWIN data with new food groupings
 Add to targets:
 
 ``` r
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     food_groupings,
     command = {
@@ -97,23 +96,8 @@ load_data_targets <- append(
 )
 ```
 
-Last, the fish encyclopedia:
+# Script file
 
-Add to targets:
+The code for this document can be found here:
 
-``` r
-load_data_targets <- append(
-  load_data_targets,
-  tar_target(
-    fish_enc_g,
-    command = {
-      fish_enc_g <- mahery_files %>%
-        str_subset("fish_enc_17Feb2025.csv") %>%
-        read.csv() %>%
-        tibble() %>%
-        rename(FISHID = FISH.ID) %>%
-        mutate(FISHID = as.character(FISHID))
-    }
-  )
-)
-```
+- [07_mah_hh_consumption.R](07_mah_hh_consumption.R)

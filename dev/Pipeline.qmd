@@ -1,11 +1,23 @@
 ---
 title: "MAHERY Pipeline"
+filters:
+  - sorting-hat
+extensions:
+  sorting-hat:
+    keep:
+      - r
+    verbose: true
 format: gfm
-engine: knitr
 ---
 
 Here we document, create, and run the pipeline all in
 one file thanks to Quarto and `targets`.
+```mermaid
+
+{{< include "pipeline.mmd" >}}
+
+```
+
 
 For the backend, we'll use this Quarto notebook as the 
 "orchestrator," meaning that the pipeline runs any time
@@ -18,12 +30,20 @@ devtools::load_all()
 
 ```{r}
 library(stringr)
+library(testthat)
 library(dplyr)
 library(here)
 ```
 
 The inputs were provided by stagecoach. The manifest for
-the stagecoach run is in `stagecoach_manifest.yaml` if you want to check it out.
+the stagecoach run is in `stagecoach_manifest.yml` if you want to check it out.
+
+```{r}
+#| format: file
+#| packages: [here]
+
+manifest <- here("stagecoach_manifest.yml")
+```
 
 ```{r}
 #| packages: [stringr, dplyr, here]
@@ -46,6 +66,10 @@ First, we unzip the data that is relevant to this pipeline:
 
 ```{r}
 target_files <- c(
+  #01 darwin
+  "fish_enc_17Feb2025\\.csv",
+  "Laoko_Mar_10_2021\\.csv",
+  # 07 mahery
   "mah_hh_dietary_intake\\.csv",
   "mahery_metadata\\.xlsx",
   "MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1\\.xlsx",
@@ -70,7 +94,58 @@ mahery_files <- unzip_tracked(
 )
 ```
 
-Now that that is done, the rest of the pipeline is found in each of the
-respective QMD files; when each of those is rendered,
-the code will be extracted to the `pipeline` directory and run as part of the pipeline.
+The rest of the nodes of the pipeline dag are defined
+according to the expectations laid out in the original
+R scripts.
 
+## Darwin
+
+There are 3 scripts that pertain to data from the Darwin project,
+AKA MAHERY-Antongil:
+
+> Golden CD, Borgerson C, Rice BL, Allen LH, Anjaranirina EJG, Barrett CB, Boateng G, Gephart JA, Hampel D, Hartl DL, Knippenberg E, Myers SS, Ralalason DH, Ramihantaniarivo H, Randriamady H, Shahab-Ferdows S, Vaitla B, Volkman SK, Vonona MA. Cohort Description of the Madagascar Health and Environmental Research-Antongil (MAHERY-Antongil) Study in Madagascar. Front Nutr. 2019 Jul 19;6:109. doi: 10.3389/fnut.2019.00109. PMID: 31428615; PMCID: PMC6690017.
+
+Our first expected output is `dar_hh_fish_with_grams_no_weekly`,
+while the inputs are the raw files `fish_enc_17Feb2025.csv`,
+`Laoko_Mar_10_2021.csv`, `all_fish_ID_7_22.csv`
+
+{{< include "pipeline/01_dar_fish_consumption.qmd" >}}
+
+We can insert our first `tar_load()` here to check that the output from the first stage of the pipeline is what we expect. 
+If this runs without error, then we know that the first stage of the pipeline is working as expected and we can move on to the second stage.
+Essentially, we're implementing test-driven development (TDD) in our notebook workflow!
+
+```{r}
+tar_load(dar_hh_fish_with_grams_no_weekly)
+
+test_that("Testing Node: dar_hh_fish_with_grams_no_weekly", {
+
+expect_true(exists("dar_hh_fish_with_grams_no_weekly"))
+expect_true(is.data.frame(dar_hh_fish_with_grams_no_weekly))
+expect_false(nrow(dar_hh_fish_with_grams_no_weekly) > 0)
+
+})
+```
+
+Next, we expect 2 outputs from the second stage Darwin
+script: `dar_hh_weekly_with_grams` and `dar_hh_24_hr_with_grams`.
+
+{{< include "pipeline/02_dar_weekly_24hr_consumption.qmd" >}}
+
+```{r}
+
+tar_load(c(dar_hh_weekly_with_grams, dar_hh_24_hr_with_grams))
+
+test_that("Testing Node(s): dar_hh_weekly_with_grams, dar_hh_24_hr_with_grams", {
+
+expect_true(exists("dar_hh_24_hr_with_grams"))
+expect_true(exists("dar_hh_weekly_with_grams"))
+
+expect_true(is.data.frame(dar_hh_24_hr_with_grams))
+expect_true(is.data.frame(dar_hh_weekly_with_grams))
+
+expect_false(nrow(dar_hh_24_hr_with_grams) > 0)
+expect_false(nrow(dar_hh_weekly_with_grams) > 0)
+
+})
+```

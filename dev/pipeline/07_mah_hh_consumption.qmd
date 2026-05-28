@@ -1,5 +1,5 @@
 ---
-title: "Load MAHERY Data"
+subtitle: "step 7"
 filters:
   - sorting-hat
   - ripper
@@ -8,11 +8,11 @@ extensions:
     keep:
       - r
     verbose: true
-  ripper:
-    include-yaml: false
-    output-dir: "../pipeline"
-    output-name: "07_mah_a_load_data"
-    script-links-position: "none"
+  # ripper:
+  #   include-yaml: false
+  #   output-dir: "../pipeline"
+  #   output-name: "07_mah_a_load_data"
+  #   script-links-position: "none"
 format: gfm
 ---
 
@@ -41,7 +41,7 @@ tar_load(mahery_files, store = here("_targets"))
 ```
 
 ```{r}
-load_data_targets <- list()
+mah_load_data_targets <- list()
 ```
 
 Read in previously cleaned MAHERY total consumption data:
@@ -63,8 +63,8 @@ mah_hh_total <- tibble(mah_hh_total)
 ```
 
 ```{r}
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     mah_hh_total,
     command = {
@@ -92,8 +92,8 @@ mah_meta <- mah_meta %>%
 Looks good, add it to the targets:
 
 ```{r}
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     mah_meta,
     command = {
@@ -130,12 +130,12 @@ new_groups
 
 Add to targets:
 ```{r}
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     new_groups,
     command = {
-      new_groups <- mahery_files %>%
+      mahery_files %>%
         str_subset(
           "MAHERY_DARWIN_ForMatching_AllUniqueFoods_to_Nutritional_Equivalents2025Feb1.xlsx"
         ) %>%
@@ -165,8 +165,8 @@ hh_comb_groups
 Add to targets:
 
 ```{r}
-load_data_targets <- append(
-  load_data_targets,
+mah_load_data_targets <- append(
+  mah_load_data_targets,
   tar_target(
     food_groupings,
     command = {
@@ -179,36 +179,3 @@ load_data_targets <- append(
 )
 ```
 
-Last, the fish encyclopedia:
-
-```{r}
-#| sorting-hat: remove
-
-fish_enc_g <- mahery_files %>%
-  str_subset("fish_enc_17Feb2025.csv") %>%
-  read.csv() %>%
-  tibble() %>%
-  rename(FISHID = FISH.ID) %>%
-  mutate(FISHID = as.character(FISHID))
-
-fish_enc_g
-```
-
-Add to targets:
-
-```{r}
-load_data_targets <- append(
-  load_data_targets,
-  tar_target(
-    fish_enc_g,
-    command = {
-      fish_enc_g <- mahery_files %>%
-        str_subset("fish_enc_17Feb2025.csv") %>%
-        read.csv() %>%
-        tibble() %>%
-        rename(FISHID = FISH.ID) %>%
-        mutate(FISHID = as.character(FISHID))
-    }
-  )
-)
-```

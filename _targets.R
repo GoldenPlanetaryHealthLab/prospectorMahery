@@ -48,12 +48,15 @@ tar_option_set(
 
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
-tar_source("pipeline")
+# tar_source("pipeline")
 # tar_source("other_functions.R") # Source other scripts as needed.
 
 # Replace the target list below with your own:
 list(
   tar_tangle("dev/Pipeline.qmd"),
-  load_data_targets,
-  update_groups_targets
+  tar_tangle("dev/pipeline/01_dar_fish_consumption.qmd")
+  # tar_tangle("dev/_02_dar_weekly_24hr_consumption.qmd")
+  # dar_load_data_targets,
+  # mah_load_data_targets,
+  # update_groups_targets
 )

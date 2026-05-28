@@ -1,0 +1,77 @@
+---
+subtitle: "Darwin Fish Consumption: 1-week and 24-hr Recall Entries"
+filters:
+  - sorting-hat
+  - ripper
+extensions:
+  sorting-hat:
+    keep:
+      - r
+    verbose: true
+  # ripper:
+  #   include-yaml: false
+  #   output-dir: "../pipeline"
+  #   output-name: "01_mah_a_load_data"
+  #   script-links-position: "none"
+format: gfm
+---
+
+```{r}
+#| deployment: main
+
+#| sorting-hat: keep
+library(dplyr)
+library(here)
+library(targets)
+```
+
+Load raw file paths, fish encyclopedia, which includes unique fish ids with taxonomic
+information and weights obtained from CPUE and FishBase/SeaLifeBase:
+  
+```{r}
+tar_load(
+  c(mahery_files, fish_enc_g),
+  store = here("_targets")
+)
+```
+
+
+```{r}
+hh_weekly <- mahery_files %>%
+  str_subset("hh_weekly") %>%
+  read.csv() %>%
+  select(-X)
+
+hh_24_hr <- mahery_files %>%
+  str_subset("hh_24_hr") %>%
+  read.csv() %>%
+  select(-X)
+```
+
+Read in Mahery average food weights per meal
+
+```{r}
+mah_foods_avg <- mahery_files %>%
+  str_subset("mah_foods_avg") %>%
+  read.csv() %>%
+  select(-X) %>%
+  rename("Malagasy Name" = "Malagasy.Name", "English Name" = "English.Name") %>%
+  mutate(dar_name = case_when(
+    var_names == "mavon" ~ "mavondro",
+    TRUE ~ dar_name
+  )) %>%
+```
+
+Final targets for this step:
+
+```{r}
+dar_hh_weekly_with_grams <- {
+  x <- c(mahery_files, hh_weekly, hh_24_hr, fish_enc_g)
+  tibble()
+}
+dar_hh_24_hr_with_grams <- {
+  x <- c(mahery_files, hh_weekly, hh_24_hr, fish_enc_g)
+  tibble()
+}
+```
+

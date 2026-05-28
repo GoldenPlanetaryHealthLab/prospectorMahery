@@ -1,0 +1,59 @@
+---
+subtitle: "step 12"
+filters:
+  - sorting-hat
+  - ripper
+extensions:
+  sorting-hat:
+    keep:
+      - r
+    verbose: true
+  # ripper:
+  #   include-yaml: false
+  #   output-dir: "../pipeline"
+  #   output-name: "01_mah_a_load_data"
+  #   script-links-position: "none"
+format: gfm
+---
+
+### Fish Consumption
+
+First we read in the 
+
+```{r}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+```{r}
+#| deployment: main
+
+#| sorting-hat: keep
+library(dplyr)
+library(here)
+library(targets)
+
+tar_load(
+  c(mahery_files),
+  store = here("_targets")
+)
+```
+
+```{r}
+#| deployment: main
+
+
+#| sorting-hat: keep
+dar_hh_fish_with_grams_no_weekly2 <- {
+  x <- mahery_files
+  tibble()
+}
+```
+
+
+```{r}
+#| deployment: main
+
+#| sorting-hat: remove
+dar_hh_fish_with_grams_no_weekly <- tibble()
+```
+
