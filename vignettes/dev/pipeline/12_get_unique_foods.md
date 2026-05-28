@@ -1,40 +1,54 @@
 
 
-### Fish Consumption
-
-First we read in the
+Obtain list of unique fish and non-fish foods across MAHERY, Darwin, and
+CRS datasets, including out-of-household foods
 
 ``` r
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
 ``` r
-#| sorting-hat: keep
+library(targets)
 library(dplyr)
 library(here)
-library(targets)
 
+devtools::load_all()
+```
+
+``` r
 tar_load(
-  c(mahery_files),
+  c(
+    fish_enc_g, new_groups, mah_hh_per_meal_grams_categs_long,
+    dar_hh_comb_groups_with_24h, dar_ooh_unique_foods, crs_unique_foods
+  ), 
   store = here("_targets")
 )
 ```
 
+<!-- Data processing goes here... -->
+
 ``` r
-#| sorting-hat: keep
-dar_hh_fish_with_grams_no_weekly2 <- {
-  x <- mahery_files
+unique_non_fish_foods <- {
+  x <- c(
+    fish_enc_g, new_groups, mah_hh_per_meal_grams_categs_long,
+    dar_hh_comb_groups_with_24h, dar_ooh_unique_foods, crs_unique_foods
+  )
+  tibble()
+}
+
+unique_fish_foods <- {
+  x <- c(
+    fish_enc_g, new_groups, mah_hh_per_meal_grams_categs_long,
+    dar_hh_comb_groups_with_24h, dar_ooh_unique_foods, crs_unique_foods
+  )
+  tibble()
+}
+
+unique_foods <- {
+  x <- c(
+    fish_enc_g, new_groups, mah_hh_per_meal_grams_categs_long,
+    dar_hh_comb_groups_with_24h, dar_ooh_unique_foods, crs_unique_foods
+  )
   tibble()
 }
 ```
-
-``` r
-#| sorting-hat: remove
-dar_hh_fish_with_grams_no_weekly <- tibble()
-```
-
-# Script file
-
-The code for this document can be found here:
-
-- [12_get_unique_foods.R](12_get_unique_foods.R)

@@ -1,5 +1,5 @@
 ---
-subtitle: "step 9"
+subtitle: "CRS Household Consumption"
 filters:
   - sorting-hat
   - ripper
@@ -8,19 +8,56 @@ extensions:
     keep:
       - r
     verbose: true
-  # ripper:
-  #   include-yaml: false
-  #   output-dir: "../pipeline"
-  #   output-name: "01_mah_a_load_data"
-  #   script-links-position: "none"
+  ripper:
+    include-yaml: false
+    output-dir: "../../tests/testthat"
+    output-name: "test-pipeline_node-09"
+    script-links-position: "none"
 format: gfm
 ---
 
+Convert CRS individual dietary consumption data to household consumption
+
 ```{r}
+library(targets)
 library(dplyr)
+library(here)
+
+devtools::load_all()
+
 ```
 
 ```{r}
-dar_hh_fish_with_grams_no_weekly <- tibble()
+tar_load(
+  c(
+    crs_indiv_daily_grams_categs_long
+  ), 
+  store = here("_targets")
+)
+```
+
+<!-- Data processing goes here... -->
+
+```{r}
+crs_hh_daily_grams_categs_long <- {
+  x <- c(
+    crs_indiv_daily_grams_categs_long
+  )
+  tibble()
+}
+
+crs_hh_weekly_grams_categs_long <- {
+  x <- c(
+    crs_indiv_daily_grams_categs_long
+  )
+  tibble()
+}
+
+crs_hh_weekly_per_month_wide <- {
+  x <- c(
+    crs_indiv_daily_grams_categs_long
+  )
+  tibble()
+}
 ```
 

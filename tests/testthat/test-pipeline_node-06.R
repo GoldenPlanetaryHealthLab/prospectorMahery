@@ -1,38 +1,15 @@
----
-subtitle: "DARWIN Out-of-household Consumption"
-filters:
-  - sorting-hat
-  - ripper
-extensions:
-  sorting-hat:
-    keep:
-      - r
-    verbose: true
-  ripper:
-    include-yaml: false
-    output-dir: "../../tests/testthat"
-    output-name: "test-pipeline_node-06"
-    script-links-position: "none"
-format: gfm
----
-
-In this step, we'll obtain total out-of-household 1-week consumption for DARWIN.
-Household totals are obtained by combining all individuals in each household. 
-
-```{r}
-#| deployment: main
-
 #| sorting-hat: keep
 library(dplyr)
+
+
 library(readxl)
 library(stringr)
 library(here)
-library(targets)
-```
 
-Load raw file paths and dependencies:
-  
-```{r}
+
+library(targets)
+
+
 tar_load(
   c(
     fish_enc_g, mah_foods_avg, dar_ooh_indiv,
@@ -40,13 +17,8 @@ tar_load(
   ),
   store = here("_targets")
 )
-```
 
-<!-- Data processing goes here... -->
 
-Final targets for this step:
-
-```{r}
 dar_ooh_indiv_with_grams <- {
   x <- c(
     fish_enc_g, mah_foods_avg, dar_ooh_indiv,
@@ -78,4 +50,3 @@ hh_total_weekly_non_fish <- {
   )
   tibble()
 }
-```

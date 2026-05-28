@@ -1,38 +1,13 @@
----
-subtitle: "Get unique foods across DARWIN and MAHERY datasets"
-filters:
-  - sorting-hat
-  - ripper
-extensions:
-  sorting-hat:
-    keep:
-      - r
-    verbose: true
-  ripper:
-    include-yaml: false
-    output-dir: "../../tests/testthat"
-    output-name: "test-pipeline_node-12"
-    script-links-position: "none"
-format: gfm
----
-
-Obtain list of unique fish and non-fish foods across MAHERY, Darwin, 
-and CRS datasets, including out-of-household foods
-
-```{r}
 knitr::opts_chunk$set(eval = FALSE)
-```
 
-```{r}
+
 library(targets)
 library(dplyr)
 library(here)
 
 devtools::load_all()
 
-```
 
-```{r}
 tar_load(
   c(
     fish_enc_g, new_groups, mah_hh_per_meal_grams_categs_long,
@@ -40,11 +15,8 @@ tar_load(
   ), 
   store = here("_targets")
 )
-```
 
-<!-- Data processing goes here... -->
 
-```{r}
 unique_non_fish_foods <- {
   x <- c(
     fish_enc_g, new_groups, mah_hh_per_meal_grams_categs_long,
@@ -68,6 +40,3 @@ unique_foods <- {
   )
   tibble()
 }
-```
-
-

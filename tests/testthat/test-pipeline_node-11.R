@@ -1,21 +1,13 @@
-
-
-Add in food categories and subcategories for combined MAH, DAR, CRS
-data, then examine average consumption by category-subcategory group
-
-``` r
 knitr::opts_chunk$set(eval = FALSE)
-```
 
-``` r
+
 library(targets)
 library(dplyr)
 library(here)
 
 devtools::load_all()
-```
 
-``` r
+
 tar_load(
   c(
     mah_dar_crs_hh_weekly_per_month_wide, new_groups,
@@ -23,11 +15,8 @@ tar_load(
   ), 
   store = here("_targets")
 )
-```
 
-<!-- Data processing goes here... -->
 
-``` r
 crs_add_categ <- {
   x <- c(
     mah_dar_crs_hh_weekly_per_month_wide, new_groups,
@@ -59,4 +48,3 @@ mah_dar_crs_avg_consump_by_group <- {
   )
   tibble()
 }
-```

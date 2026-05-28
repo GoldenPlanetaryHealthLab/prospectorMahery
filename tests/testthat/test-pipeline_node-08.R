@@ -1,35 +1,14 @@
----
-subtitle: "CRS Individual Consumption Data Cleaning"
-filters:
-  - sorting-hat
-  - ripper
-extensions:
-  sorting-hat:
-    keep:
-      - r
-    verbose: true
-  ripper:
-    include-yaml: false
-    output-dir: "../../tests/testthat"
-    output-name: "test-pipeline_node-08"
-    script-links-position: "none"
-format: gfm
----
-
-This notebook cleans CRS individual dietary consumption data
-
-```{r}
 library(dplyr)        # for tidy data routines #TODO slim this down
+
+
 library(readxl)           # for reading excel files
 library(stringr)
 library(here)
 
+
 devtools::load_all()
-```
 
-Load the `targets` store:
 
-```{r}
 library(targets)
 tar_load(
   c(
@@ -38,11 +17,8 @@ tar_load(
   ), 
   store = here("_targets")
 )
-```
 
-Read in previously cleaned MAHERY total consumption data:
 
-```{r}
 crs_raw <- mahery_files %>%
   str_subset("Survey_Data_Adults_All_Merged.csv") %>%
   read.csv() %>%
@@ -57,13 +33,8 @@ crs_changes <- mahery_files %>%
   str_subset("CRS_fuzzy_match_to_DAR_for_weights.xlsx") %>%
   read_xlsx() %>%
   tibble()
-```
 
-<!-- Data processing goes here... -->
 
-Final targets for this step:
-
-```{r}
 crs_names_units <- {
   x <- c(
     u_isany, u_kapoaka, u_other, u_NA,
@@ -107,5 +78,3 @@ crs_indiv_daily_grams_categs_long <- {
   )
   tibble()
 }
-
-```

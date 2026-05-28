@@ -1,7 +1,3 @@
-#' ---
-#' ---
-#' 
-
 knitr::opts_chunk$set(eval = FALSE)
 
 
@@ -17,11 +13,7 @@ tar_load(
 
 
 #| sorting-hat: keep
-dar_hh_fish_with_grams_no_weekly2 <- {
-  x <- mahery_files
+dar_hh_fish_with_grams_no_weekly <- {
+  x <- c(mahery_files, fish_enc_g, hh_fish)
   tibble()
 }
-
-
-#| sorting-hat: remove
-dar_hh_fish_with_grams_no_weekly <- tibble()

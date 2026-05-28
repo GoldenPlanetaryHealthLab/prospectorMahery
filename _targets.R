@@ -10,8 +10,10 @@ devtools::load_all(".") # Load all functions in the package (assuming this code 
 
 # Set target options:
 tar_option_set(
-  packages = c("tibble", "dplyr", "readxl", "stringr",
-  "tidyr") # Packages that your targets need for their tasks.
+  packages = c(
+    "tibble", "dplyr", "readxl", "stringr",
+    "tidyr", "here"
+  ) # Packages that your targets need for their tasks.
   # format = "qs", # Optionally set the default storage format. qs is fast.
   #
   # Pipelines that take a long time to run may benefit from
@@ -54,9 +56,16 @@ tar_source()
 # Replace the target list below with your own:
 list(
   tar_tangle("dev/Pipeline.qmd"),
-  tar_tangle("dev/pipeline/01_dar_fish_consumption.qmd")
-  # tar_tangle("dev/_02_dar_weekly_24hr_consumption.qmd")
-  # dar_load_data_targets,
-  # mah_load_data_targets,
-  # update_groups_targets
+  tar_tangle("dev/pipeline/01_dar_fish_consumption.qmd"),
+  tar_tangle("dev/pipeline/02_dar_weekly_24hr_consumption.qmd"),
+  tar_tangle("dev/pipeline/03_dar_hh_fish_consumption.qmd"),
+  tar_tangle("dev/pipeline/04_dar_hh_non_fish_and_all_foods_consumption.qmd"),
+  tar_tangle("dev/pipeline/05_dar_ooh_indiv_cleaning.qmd"),
+  tar_tangle("dev/pipeline/06_dar_ooh_indiv_consumption.qmd"),
+  tar_tangle("dev/pipeline/07_mah_hh_consumption.qmd"),
+  tar_tangle("dev/pipeline/08_crs_indiv_consumption.qmd"),
+  tar_tangle("dev/pipeline/09_crs_hh_weekly_consumption.qmd"),
+  tar_tangle("dev/pipeline/10_hh_combine_cohorts.qmd"),
+  tar_tangle("dev/pipeline/11_food_groups.qmd"),
+  tar_tangle("dev/pipeline/12_get_unique_foods.qmd")
 )

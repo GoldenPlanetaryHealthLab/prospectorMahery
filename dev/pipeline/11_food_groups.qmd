@@ -1,5 +1,5 @@
 ---
-subtitle: "step 11"
+subtitle: "Add in food cateogires for combined data"
 filters:
   - sorting-hat
   - ripper
@@ -8,52 +8,74 @@ extensions:
     keep:
       - r
     verbose: true
-  # ripper:
-  #   include-yaml: false
-  #   output-dir: "../pipeline"
-  #   output-name: "01_mah_a_load_data"
-  #   script-links-position: "none"
+  ripper:
+    include-yaml: false
+    output-dir: "../../tests/testthat"
+    output-name: "test-pipeline_node-11"
+    script-links-position: "none"
 format: gfm
 ---
 
-### Fish Consumption
-
-First we read in the 
+Add in food categories and subcategories for combined MAH, DAR, CRS
+data, then examine average consumption by category-subcategory group
 
 ```{r}
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
 ```{r}
-#| deployment: main
-
-#| sorting-hat: keep
+library(targets)
 library(dplyr)
 library(here)
-library(targets)
 
+devtools::load_all()
+
+```
+
+```{r}
 tar_load(
-  c(mahery_files),
+  c(
+    mah_dar_crs_hh_weekly_per_month_wide, new_groups,
+    crs_unique_foods
+  ), 
   store = here("_targets")
 )
 ```
 
+<!-- Data processing goes here... -->
+
 ```{r}
-#| deployment: main
+crs_add_categ <- {
+  x <- c(
+    mah_dar_crs_hh_weekly_per_month_wide, new_groups,
+    crs_unique_foods
+  )
+  tibble()
+}
 
+mah_dar_crs_hh_weekly_per_month_long <- {
+  x <- c(
+    mah_dar_crs_hh_weekly_per_month_wide, new_groups,
+    crs_unique_foods
+  )
+  tibble()
+}
 
-#| sorting-hat: keep
-dar_hh_fish_with_grams_no_weekly2 <- {
-  x <- mahery_files
+mah_dar_crs_hh_groups_weekly_per_month_grams_categ_long <- {
+  x <- c(
+    mah_dar_crs_hh_weekly_per_month_wide, new_groups,
+    crs_unique_foods
+  )
+  tibble()
+}
+
+mah_dar_crs_avg_consump_by_group <- {
+  x <- c(
+    mah_dar_crs_hh_weekly_per_month_wide, new_groups,
+    crs_unique_foods
+  )
   tibble()
 }
 ```
 
-
-```{r}
-#| deployment: main
-
-#| sorting-hat: remove
-dar_hh_fish_with_grams_no_weekly <- tibble()
-```
 

@@ -1,47 +1,23 @@
----
-subtitle: "DARWIN Out-of-household Cleaning"
-filters:
-  - sorting-hat
-  - ripper
-extensions:
-  sorting-hat:
-    keep:
-      - r
-    verbose: true
-  ripper:
-    include-yaml: false
-    output-dir: "../../tests/testthat"
-    output-name: "test-pipeline_node-05"
-    script-links-position: "none"
-format: gfm
----
-
-In this step, we'll clean out-of-household 1-week data for DARWIN. 
-
-```{r}
-#| deployment: main
-
 #| sorting-hat: keep
 library(dplyr)
+
+
 library(readxl)
 library(stringr)
 library(here)
-library(targets)
-```
 
-Load raw file paths, fish encyclopedia, which includes unique fish ids with taxonomic
-information and weights obtained from CPUE and FishBase/SeaLifeBase:
-  
-```{r}
+
+library(targets)
+
+
 tar_load(
   c(
     mahery_files, darwin_pop, new_groups
   ),
   store = here("_targets")
 )
-```
 
-```{r}
+
 ooh <- mahery_files %>%
   str_subset("MeasureSakafo") %>%
   read.csv() %>%
@@ -65,13 +41,8 @@ amounts_ooh <- mahery_files %>%
     Action = str_to_lower(Action), 
     `New Notes` = str_to_lower(`New Notes`)
   )
-```
 
-<!-- Data processing goes here... -->
 
-Final targets for this step:
-
-```{r}
 dar_ooh_medicine_entries <- {
   x <- c(new_groups, ooh, clean_ooh, amounts_ooh)
   tibble()
@@ -88,5 +59,3 @@ dar_ooh_unique_foods <- {
   x <- c(new_groups, ooh, clean_ooh, amounts_ooh)
   tibble()
 }
-```
-

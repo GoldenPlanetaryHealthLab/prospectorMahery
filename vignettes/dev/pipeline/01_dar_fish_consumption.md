@@ -1,8 +1,6 @@
 
 
-### Fish Consumption
-
-First we read in the
+### Read in Data
 
 ``` r
 knitr::opts_chunk$set(eval = FALSE)
@@ -13,18 +11,17 @@ knitr::opts_chunk$set(eval = FALSE)
 library(dplyr)
 library(here)
 library(targets)
+
+tar_load(
+  c(mahery_files),
+  store = here("_targets")
+)
 ```
 
 ``` r
 #| sorting-hat: keep
 dar_hh_fish_with_grams_no_weekly <- {
-  x <- mahery_files
+  x <- c(mahery_files, fish_enc_g, hh_fish)
   tibble()
 }
 ```
-
-# Script file
-
-The code for this document can be found here:
-
-- [01_dar_fish_consumption.R](01_dar_fish_consumption.R)

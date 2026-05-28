@@ -8,11 +8,11 @@ extensions:
     keep:
       - r
     verbose: true
-  # ripper:
-  #   include-yaml: false
-  #   output-dir: "../pipeline"
-  #   output-name: "01_mah_a_load_data"
-  #   script-links-position: "none"
+  ripper:
+    include-yaml: false
+    output-dir: "../../tests/testthat"
+    output-name: "test-pipeline_node-02"
+    script-links-position: "none"
 format: gfm
 ---
 
@@ -21,6 +21,7 @@ format: gfm
 
 #| sorting-hat: keep
 library(dplyr)
+library(stringr)
 library(here)
 library(targets)
 ```
@@ -38,7 +39,7 @@ tar_load(
 
 ```{r}
 hh_weekly <- mahery_files %>%
-  str_subset("hh_weekly") %>%
+  str_subset("hh_weekly.csv") %>%
   read.csv() %>%
   select(-X)
 
@@ -56,11 +57,44 @@ mah_foods_avg <- mahery_files %>%
   read.csv() %>%
   select(-X) %>%
   rename("Malagasy Name" = "Malagasy.Name", "English Name" = "English.Name") %>%
-  mutate(dar_name = case_when(
-    var_names == "mavon" ~ "mavondro",
-    TRUE ~ dar_name
-  )) %>%
+  mutate(
+    dar_name = replace_when(
+      dar_name, var_names == "mavon" ~ "mavondro"
+    )
+  )
 ```
+
+Read in gram unit conversion files:
+
+```{r}
+u_isany <- mahery_files %>%
+  str_subset("utg_isany") %>%
+  read.csv() %>%
+  mutate(
+    FISHID = as.character(FISHID), 
+    CookingMethod2 = as.character(CookingMethod2)
+  )
+# Read in gram conversions for items measured by cup ('kapoaka')
+u_kapoaka <- mahery_files %>%
+  str_subset("utg_kapoaka") %>%
+  read.csv() %>%
+  mutate(FISHID = as.character(FISHID))
+
+# Read in gram conversions for items measured by other units 
+u_other <- mahery_files %>%
+  str_subset("utg_other") %>%
+  read.csv() %>%
+  mutate(FISHID = as.character(FISHID))
+
+# Read in gram conversions for items with no measurement unit
+u_NA <- mahery_files %>%
+  str_subset("utg_NA") %>%
+  read.csv() %>%#[1:2,]
+  slice(1:2) %>%
+  mutate(FISHID = as.character(FISHID))
+```
+
+<!-- Data processing goes here... -->
 
 Final targets for this step:
 

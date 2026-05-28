@@ -1,18 +1,18 @@
 ---
 subtitle: "Darwin Fish Recall Entries"
-# filters:
-#   - sorting-hat
-#   - ripper
-# extensions:
-#   sorting-hat:
-#     keep:
-#       - r
-#     verbose: true
-  # ripper:
-  #   include-yaml: false
-  #   output-dir: "../pipeline"
-  #   output-name: "01_mah_a_load_data"
-  #   script-links-position: "none"
+filters:
+  - sorting-hat
+  - ripper
+extensions:
+  sorting-hat:
+    keep:
+      - r
+    verbose: true
+  ripper:
+    include-yaml: false
+    output-dir: "../../tests/testthat"
+    output-name: "test-pipeline_node-01"
+    script-links-position: "none"
 format: gfm
 ---
 
@@ -37,6 +37,9 @@ tar_load(
 ```
 
 ```{r}
+#| deployment: main
+
+#| sorting-hat: remove
 fish_enc_g <- mahery_files %>%
   str_subset("fish_enc_17Feb2025") %>%
   read.csv()
