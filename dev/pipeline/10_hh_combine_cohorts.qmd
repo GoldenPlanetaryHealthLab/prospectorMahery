@@ -1,0 +1,83 @@
+---
+subtitle: "Household Consumption Combining MAHERY and DARWIN Datasets"
+filters:
+  - sorting-hat
+  - ripper
+extensions:
+  sorting-hat:
+    keep:
+      - r
+    verbose: true
+  ripper:
+    include-yaml: false
+    output-dir: "../../tests/testthat"
+    output-name: "test-pipeline_node-10"
+    script-links-position: "none"
+format: gfm
+---
+
+Combine all MAHERY, DARWIN, and CRS household weekly dietary 
+consumption data. 0 means no consumption; NA's where food was not captured in 
+that dataset are converted to 0's. Note: CRS was captured as individual 24-hour
+recall data and converted to weekly household intake.
+
+```{r}
+library(targets)
+library(dplyr)
+library(here)
+
+devtools::load_all()
+
+```
+
+```{r}
+tar_load(
+  c(
+    mah_hh_weekly_per_month_wide, dar_hh_weekly_per_month_wide,
+    crs_hh_weekly_per_month_wide, mah_avg_hh_weekly_grams_categs_long,
+    dar_avg_hh_weekly_grams_categs_long, crs_hh_weekly_grams_categs_long,
+    mah_avg_hh_daily_grams_categs_long, dar_avg_hh_daily_grams_categs_long,
+    crs_hh_daily_grams_categs_long
+  ), 
+  store = here("_targets")
+)
+```
+
+<!-- Data processing goes here... -->
+
+```{r}
+mah_dar_crs_hh_weekly_per_month_wide <- {
+  x <- c(
+    mah_hh_weekly_per_month_wide, dar_hh_weekly_per_month_wide,
+    crs_hh_weekly_per_month_wide, mah_avg_hh_weekly_grams_categs_long,
+    dar_avg_hh_weekly_grams_categs_long, crs_hh_weekly_grams_categs_long,
+    mah_avg_hh_daily_grams_categs_long, dar_avg_hh_daily_grams_categs_long,
+    crs_hh_daily_grams_categs_long
+  )
+  tibble()
+}
+
+mah_dar_crs_avg_hh_weekly_grams_categs_long <- {
+  x <- c(
+    mah_hh_weekly_per_month_wide, dar_hh_weekly_per_month_wide,
+    crs_hh_weekly_per_month_wide, mah_avg_hh_weekly_grams_categs_long,
+    dar_avg_hh_weekly_grams_categs_long, crs_hh_weekly_grams_categs_long,
+    mah_avg_hh_daily_grams_categs_long, dar_avg_hh_daily_grams_categs_long,
+    crs_hh_daily_grams_categs_long
+  )
+  tibble()
+}
+
+mah_dar_crs_avg_hh_daily_grams_categs_long <- {
+  x <- c(
+    mah_hh_weekly_per_month_wide, dar_hh_weekly_per_month_wide,
+    crs_hh_weekly_per_month_wide, mah_avg_hh_weekly_grams_categs_long,
+    dar_avg_hh_weekly_grams_categs_long, crs_hh_weekly_grams_categs_long,
+    mah_avg_hh_daily_grams_categs_long, dar_avg_hh_daily_grams_categs_long,
+    crs_hh_daily_grams_categs_long
+  )
+  tibble()
+}
+```
+
+
